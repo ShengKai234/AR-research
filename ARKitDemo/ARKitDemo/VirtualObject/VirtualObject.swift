@@ -10,20 +10,24 @@ import Foundation
 import SceneKit
 import ARKit
 
-class VirtualObject: SCNReferenceNode
+class VirtualObject
 {
-    var projectName: String?
-    var dateStart: String?
-    var dateEnd: String?
-    var isStart: String?
-    var isCheck: String?
+    var projectName: String
+    var dateStart: String
+    var dateEnd: String
+    var isStart: Bool
+    var isCheck: Bool
     
     
-    func getData(projectName: String, dateStart: String, dateEnd: String, isStart: String, isCheck: String) {
+    init(projectName: String, dateStart: String, dateEnd: String, isStart: Bool, isCheck: Bool) {
         self.projectName = projectName
         self.dateStart = dateStart
         self.dateEnd = dateEnd
         self.isStart = isStart
         self.isCheck = isCheck
+    }
+    
+    convenience init() {
+        self.init(projectName: "", dateStart: "", dateEnd: "", isStart: false, isCheck: false)
     }
 }

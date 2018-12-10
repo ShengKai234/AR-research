@@ -30,18 +30,40 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
     //--------------------------------------虛擬物件建立於場景中時間控制
     let fadeDuration: TimeInterval = 1
     let rotateDuration: TimeInterval = 3
-    let waitDuration: TimeInterval = 100
-    var box_1_Info: [String: String] = ["name":"box_1", "dateStart":"2018-11-01", "dateEnd":"2018-11-09", "isStart":"yes", "isCheck":"yes"]
-    var box_2_Info: [String: String] = [:]
-    var box_3_Info: [String: String] = [:]
-    var box_4_Info: [String: String] = [:]
+    let waitDuration: TimeInterval = 3600
+    var plane: [String: String] = [:]
+    var wall_1: [String: String] = [:]
+    var wall_2: [String: String] = [:]
+    var wall_3: [String: String] = [:]
+    var wall_4: [String: String] = [:]
+    var column_1: [String: String] = [:]
+    var column_2: [String: String] = [:]
+    var column_3: [String: String] = [:]
+    var column_4: [String: String] = [:]
+    var plane_top: [String: String] = [:]
+    var reinforce: [String: String] = [:]
+    var falsework: [String: String] = [:]
     
+    
+    //var boxs = [box_1_Info, box_2_Info, box_3_Info, box_4_Info]
     func getData()
     {
-       // box_1_Info = ["name":"box_1", "dateStart":"2018-11-01", "dateEnd":"2018-11-09", "isStart":"yes", "isCheck":"yes"]
-        box_2_Info = ["name":"box_2", "dateStart":"2018-11-01", "dateEnd":"2018-11-08", "isStart":"yes", "isCheck":"no"]
-        box_3_Info = ["name":"box_3", "dateStart":"2018-11-05", "dateEnd":"2018-11-15", "isStart":"yes", "isCheck":"no"]
-        box_4_Info = ["name":"box_4", "dateStart":"2018-11-16", "dateEnd":"2018-11-18", "isStart":"no", "isCheck":"no"]
+        plane = ["name":"plane", "dateStart":"2018-11-17", "dateEnd":"2018-11-20", "isStart":"yes", "isCheck":"yes"]
+        
+        reinforce = ["name":"reinforce", "dateStart":"2018-11-20", "dateEnd":"2018-11-22", "isStart":"yes", "isCheck":"yes"]
+        column_1 = ["name":"column-1", "dateStart":"2018-11-22", "dateEnd":"2018-11-25", "isStart":"yes", "isCheck":"no"]
+        column_2 = ["name":"column-2", "dateStart":"2018-11-22", "dateEnd":"2018-11-25", "isStart":"yes", "isCheck":"no"]
+        column_3 = ["name":"column-3", "dateStart":"2018-11-22", "dateEnd":"2018-11-25", "isStart":"yes", "isCheck":"no"]
+        column_4 = ["name":"column-4", "dateStart":"2018-11-22", "dateEnd":"2018-11-25", "isStart":"yes", "isCheck":"no"]
+        wall_1 = ["name":"wall-1", "dateStart":"2018-11-25", "dateEnd":"2018-11-28", "isStart":"no", "isCheck":"no"]
+        wall_2 = ["name":"wall-2", "dateStart":"2018-11-25", "dateEnd":"2018-11-28", "isStart":"no", "isCheck":"no"]
+        wall_3 = ["name":"wall-3", "dateStart":"2018-11-25", "dateEnd":"2018-11-28", "isStart":"no", "isCheck":"no"]
+        wall_4 = ["name":"wall-4", "dateStart":"2018-11-25", "dateEnd":"2018-11-28", "isStart":"no", "isCheck":"no"]
+        plane_top = ["name":"plane-top", "dateStart":"2018-11-30", "dateEnd":"2018-12-1", "isStart":"no", "isCheck":"no"]
+    }
+    func updateDate()
+    {
+        
     }
     
     //Date controller
@@ -52,10 +74,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
     @IBAction func DataPicker(_ sender: UIDatePicker)
     {
         
-        var boxs = [box_1_Info, box_2_Info, box_3_Info, box_4_Info]
+        var boxs = [plane, wall_1, wall_2, wall_3, wall_4, reinforce, column_1, column_2, column_3, column_4, plane_top]
         
         formatter.dateFormat = "yyyy/MM/dd"
-        label_time.text = formatter.string(from: sender.date)
+//        label_time.text = formatter.string(from: sender.date)
         
         for box in boxs
         {
@@ -87,24 +109,47 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
                 currentNode?.childNode(withName: box["name"]!, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.red
             }
         }
+    }
+    
+    func DataPicker()
+    {
         
-//        let boxDateline1 = formatter.date(from: box_1_Info["dateStart"]!)
-//        //if boxDateline1 older sender(select Date())
-//        if  (sender.date.compare(boxDateline1!) == .orderedAscending)
-//        {
-////            currentNode?.childNode(withName: "box_1", recursively: false)?.isHidden = true
-//            currentNode?.childNode(withName: "box_1", recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-//            currentNode?.childNode(withName: "box_1", recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.blue
-//        //else if sender(select Date()) older boxDateline1
-//        }else if(boxs[0]["ischeck"] == "yes"){
-////            currentNode?.childNode(withName: "box_1", recursively: false)?.isHidden = false
-//            currentNode?.childNode(withName: "box_1", recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-//            currentNode?.childNode(withName: "box_1", recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.green
-//        }else{
-//            //            currentNode?.childNode(withName: "box_1", recursively: false)?.isHidden = false
-//            currentNode?.childNode(withName: "box_1", recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-//            currentNode?.childNode(withName: "box_1", recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.red
-//        }
+        var boxs = [plane, wall_1, wall_2, wall_3, wall_4,reinforce, column_1, column_2, column_3, column_4, plane_top]
+        let sender = now
+        formatter.dateFormat = "yyyy/MM/dd"
+        //        label_time.text = formatter.string(from: sender.date)
+        
+        for box in boxs
+        {
+            let boxDateStart = formatter.date(from: box["dateStart"]!)
+            let boxDateEnd = formatter.date(from: box["dateEnd"]!)
+            //if boxDateStart later sender(select Date())
+            if  (now.compare(boxDateStart!) == .orderedAscending && box["isStart"] == "no")
+            {
+                currentNode?.childNode(withName: box["name"]!, recursively: false)?.isHidden = false
+                currentNode?.childNode(withName: box["name"]!, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+                currentNode?.childNode(withName: box["name"]!, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.blue
+                if (sender < (boxDateStart!)) {
+                    currentNode?.childNode(withName: box["name"]!, recursively: false)?.isHidden = true
+                }
+                //else if sender(select Date()) later boxDateStart and is check
+            }else if(box["isCheck"] == "yes" && box["isStart"] == "yes"){
+                currentNode?.childNode(withName: box["name"]!, recursively: false)?.isHidden = false
+                currentNode?.childNode(withName: box["name"]!, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                currentNode?.childNode(withName: box["name"]!, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.green
+                //else if sender(select Date()) later boxDateStart and is start doing
+            }else if((box["isStart"] == "yes" && sender.compare(boxDateEnd!) == .orderedAscending) || (box["isStart"] == "yes" && sender.compare(boxDateEnd!) == .orderedSame)){
+                currentNode?.childNode(withName: box["name"]!, recursively: false)?.isHidden = false
+                currentNode?.childNode(withName: box["name"]!, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.yellow
+                currentNode?.childNode(withName: box["name"]!, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.yellow
+                //else sender(select Date()) later boxDateStart and is start doing and sender later boxDateEnd
+            }else{
+                currentNode?.childNode(withName: box["name"]!, recursively: false)?.isHidden = false
+                currentNode?.childNode(withName: box["name"]!, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                currentNode?.childNode(withName: box["name"]!, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.red
+            }
+        }
+        
     }
     
     
@@ -142,7 +187,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
     
     lazy var fadeAndSpinAction: SCNAction = {
         return .sequence([
-            .fadeIn(duration: fadeDuration),
+            //.fadeIn(duration: fadeDuration),
 //            .rotateBy(x: 0, y: 0, z: CGFloat.pi * 360 / 180, duration: rotateDuration)
             
             ])
@@ -157,33 +202,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
     }()
     
     //--------------------------------------物件建立於場景的初始化，以及影像辨識對應的物件
-
-    lazy var ShipNode: SCNNode = {
-        guard let scene = SCNScene(named: "ship.scn"),
-            let node = scene.rootNode.childNode(withName: "ship", recursively: false) else { return SCNNode() }
-        let scaleFactor  = 0.5
-        node.scale = SCNVector3(scaleFactor, scaleFactor, scaleFactor)
-        node.eulerAngles.x += -.pi / 2
-        return node
-    }()
-    
-    lazy var MountainNode: SCNNode = {
-        guard let scene = SCNScene(named: "mountain.scn"),
-            let node = scene.rootNode.childNode(withName: "mountain", recursively: false) else { return SCNNode() }
-        let scaleFactor  = 0.25
-        node.scale = SCNVector3(scaleFactor, scaleFactor, scaleFactor)
-        node.eulerAngles.x += -.pi / 2
-        return node
-    }()
-    
-    lazy var BoxNode: SCNNode = {
-        let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
-        let boxNode = SCNNode()
-        boxNode.geometry = box
-        
-        return boxNode
-    }()
-    
     lazy var ColumnNode: SCNNode = {
         guard let scene = SCNScene(named: "cube.scn"),
             let node = scene.rootNode.childNode(withName: "box_node", recursively: false) else { return SCNNode() }
@@ -198,7 +216,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
 //        configureLighting()
         addTapGestureToSceneView()
         getData()
-        
         locationManager.delegate = self
         
         if CLLocationManager.isMonitoringAvailable(for: CLBeaconRegion.self){
@@ -249,12 +266,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
         //執行sceneView配置，－－> renderer
         sceneView.session.run(configuration, options: options)
         label.text = "Move Camera around tp detect images"
+        DataPicker()
         
     }
     //------------------------------------------------
 
     
-    //--------------------------------------點擊事件，刪除物件
+    //--------------------------------------點擊事件，參數傳遞
     private var selectNode: SCNNode?
     func addTapGestureToSceneView()
     {
@@ -272,9 +290,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        var boxs = [box_1_Info, box_2_Info, box_3_Info, box_4_Info]
+        var boxs = [plane, wall_1, wall_2, wall_3, wall_4,reinforce, column_1, column_2, column_3, column_4, plane_top]
         if segue.identifier == "ShowObjInfo" {
             let destinationController = segue.destination as! VirtualObjectViewController
+            var progressCount: Float = 0
+            for box in boxs
+            {
+                if (box["isCheck"] == "yes") {
+                   progressCount += 1.0
+                }
+            }
             for box in boxs
             {
                 if (selectNode?.name == box["name"]!)
@@ -284,12 +309,121 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
                     destinationController.dateEnd = (box["dateEnd"]!)
                     destinationController.isStart = (box["isStart"]!)
                     destinationController.isCheck = (box["isCheck"]!)
+                    destinationController.progressCount = progressCount
+                    print (box)
+                    break
                 }
             }
         }
     }
     
     //------------------------------------------------
+    
+    //回傳---------------------------------------------
+    
+    @IBAction func unwind (for segue: UIStoryboardSegue, sender: Any?)
+    {
+        var boxs = [plane, wall_1, wall_2, wall_3, wall_4,reinforce, column_1, column_2, column_3, column_4, plane_top]
+        let destinationController = segue.source as! VirtualObjectViewController
+        if segue.identifier == "updateInfo" {
+            
+            print(destinationController.name)
+            print(plane["name"]!)
+            if destinationController.name == plane["name"]!{
+                plane["dateStart"]! = destinationController.dateStart
+                plane["dateEnd"]! = destinationController.dateEnd
+                plane["isStart"]! = destinationController.isStart
+                plane["isCheck"]! = destinationController.isCheck
+                print("success")
+            }
+            if destinationController.name == wall_1["name"]!{
+                wall_1["dateStart"]! = destinationController.textStart.text!
+                wall_1["dateEnd"]! = destinationController.textEnd.text!
+                wall_1["isStart"]! = destinationController.isStart
+                wall_1["isCheck"]! = destinationController.isCheck
+                print("success")
+            }
+            if destinationController.name == wall_2["name"]!{
+                wall_2["dateStart"]! = destinationController.dateStart
+                wall_2["dateEnd"]! = destinationController.dateEnd
+                wall_2["isStart"]! = destinationController.isStart
+                wall_2["isCheck"]! = destinationController.isCheck
+                print("success")
+            }
+            if destinationController.name == wall_3["name"]!{
+                wall_3["dateStart"]! = destinationController.dateStart
+                wall_3["dateEnd"]! = destinationController.dateEnd
+                wall_3["isStart"]! = destinationController.isStart
+                wall_3["isCheck"]! = destinationController.isCheck
+                print("success")
+            }
+            if destinationController.name == wall_4["name"]!{
+                wall_4["dateStart"]! = destinationController.dateStart
+                wall_4["dateEnd"]! = destinationController.dateEnd
+                wall_4["isStart"]! = destinationController.isStart
+                wall_4["isCheck"]! = destinationController.isCheck
+                print("success")
+            }
+            if destinationController.name == reinforce["name"]!{
+                reinforce["dateStart"]! = destinationController.dateStart
+                reinforce["dateEnd"]! = destinationController.dateEnd
+                reinforce["isStart"]! = destinationController.isStart
+                reinforce["isCheck"]! = destinationController.isCheck
+                print("success")
+            }
+            if destinationController.name == column_1["name"]!{
+                column_1["dateStart"]! = destinationController.dateStart
+                column_1["dateEnd"]! = destinationController.dateEnd
+                column_1["isStart"]! = destinationController.isStart
+                column_1["isCheck"]! = destinationController.isCheck
+                print("success")
+            }
+            if destinationController.name == column_2["name"]!{
+                column_2["dateStart"]! = destinationController.dateStart
+                column_2["dateEnd"]! = destinationController.dateEnd
+                column_2["isStart"]! = destinationController.isStart
+                column_2["isCheck"]! = destinationController.isCheck
+                print("success")
+            }
+            if destinationController.name == column_3["name"]!{
+                column_3["dateStart"]! = destinationController.dateStart
+                column_3["dateEnd"]! = destinationController.dateEnd
+                column_3["isStart"]! = destinationController.isStart
+                column_3["isCheck"]! = destinationController.isCheck
+                print("success")
+            }
+            if destinationController.name == column_4["name"]!{
+                column_4["dateStart"]! = destinationController.dateStart
+                column_4["dateEnd"]! = destinationController.dateEnd
+                column_4["isStart"]! = destinationController.isStart
+                column_4["isCheck"]! = destinationController.isCheck
+                print("success")
+            }
+            if destinationController.name == plane_top["name"]!{
+                plane_top["dateStart"]! = destinationController.dateStart
+                plane_top["dateEnd"]! = destinationController.dateEnd
+                plane_top["isStart"]! = destinationController.isStart
+                plane_top["isCheck"]! = destinationController.isCheck
+                print("success")
+            }
+            
+//            for var box in boxs
+//            {
+//                if (destinationController.name == box["name"]!)
+//                {
+//                    box["dateStart"] = destinationController.dateStart
+//                    box["dateEnd"] = destinationController.dateEnd
+//                    box["isStart"] = destinationController.isStart
+//                    box["isCheck"] = "no"
+//
+//                }
+//            }
+        }
+    }
+    
+    //------------------------------------------------
+    
+    
     
     //Beacon -----------------------------------------
     @IBAction func monitorIBeacon(_ sender: UIButton) {
@@ -412,7 +546,7 @@ extension ViewController: ARSCNViewDelegate {
                         let planeNode = self.getPlaneNode(withReferenceImage: imageAnchor.referenceImage)
                         planeNode.opacity = 0.0
                         planeNode.eulerAngles.x = -.pi / 2
-                        planeNode.runAction(self.fadeAction)
+//                        planeNode.runAction(self.fadeAction)
                         node.addChildNode(planeNode)
             
             // TODO: Overlay 3D Object
@@ -438,8 +572,7 @@ extension ViewController: ARSCNViewDelegate {
         case "column":
             node = ColumnNode
             currentNode = ColumnNode
-        case "Snow Mountain":
-            node = MountainNode
+            DataPicker()
         default:
             break
         }
