@@ -286,6 +286,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate  {
         let hitTestResults = sceneView.hitTest(tapLocation)
         guard let node = hitTestResults.first?.node else { return }
         selectNode = node
+        
+        //performSegue 用虛擬物件做view傳輸，如果有button可以直接建立連線不用使用此行
         performSegue(withIdentifier: "ShowObjInfo", sender: nil)
     }
     

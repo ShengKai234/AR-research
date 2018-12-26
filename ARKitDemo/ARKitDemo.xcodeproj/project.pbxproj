@@ -11,6 +11,7 @@
 		2A4C8EF32196814600821ABF /* VirtualObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4C8EF22196814600821ABF /* VirtualObject.swift */; };
 		2A4C8EFE2196C6D000821ABF /* VirtualObjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4C8EFD2196C6D000821ABF /* VirtualObjectViewController.swift */; };
 		2A5A621D2186E054008973C2 /* cube.scn in Resources */ = {isa = PBXBuildFile; fileRef = 2A5A621C2186E054008973C2 /* cube.scn */; };
+		2A67A6B921C22F9400B0A6E9 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A67A6B821C22F9400B0A6E9 /* LoginViewController.swift */; };
 		2A9F96CA2105AB4900D10C57 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9F96C92105AB4900D10C57 /* AppDelegate.swift */; };
 		2A9F96CC2105AB4900D10C57 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9F96CB2105AB4900D10C57 /* ViewController.swift */; };
 		2A9F96CF2105AB4900D10C57 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A9F96CD2105AB4900D10C57 /* Main.storyboard */; };
@@ -25,6 +26,7 @@
 		2A4C8EF22196814600821ABF /* VirtualObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualObject.swift; sourceTree = "<group>"; };
 		2A4C8EFD2196C6D000821ABF /* VirtualObjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualObjectViewController.swift; sourceTree = "<group>"; };
 		2A5A621C2186E054008973C2 /* cube.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = cube.scn; sourceTree = "<group>"; };
+		2A67A6B821C22F9400B0A6E9 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		2A9F96C62105AB4900D10C57 /* ARKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A9F96C92105AB4900D10C57 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2A9F96CB2105AB4900D10C57 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 				2A9F96C92105AB4900D10C57 /* AppDelegate.swift */,
 				2A9F96CB2105AB4900D10C57 /* ViewController.swift */,
 				2A9F96CD2105AB4900D10C57 /* Main.storyboard */,
+				2A67A6B821C22F9400B0A6E9 /* LoginViewController.swift */,
 				2A9F96D02105AB4A00D10C57 /* Assets.xcassets */,
 				2A9F96D22105AB4A00D10C57 /* LaunchScreen.storyboard */,
 				2A9F96D52105AB4A00D10C57 /* Info.plist */,
@@ -191,6 +194,7 @@
 				2A9F96CC2105AB4900D10C57 /* ViewController.swift in Sources */,
 				2A9F96CA2105AB4900D10C57 /* AppDelegate.swift in Sources */,
 				2A4C8EF32196814600821ABF /* VirtualObject.swift in Sources */,
+				2A67A6B921C22F9400B0A6E9 /* LoginViewController.swift in Sources */,
 				2A4C8EFE2196C6D000821ABF /* VirtualObjectViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
