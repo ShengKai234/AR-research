@@ -26,9 +26,14 @@ class ViewController: UIViewController {
     
     //--------------------------------------Login button
     @IBAction func buttonLogin(_ sender: UIButton) {
-        userLogin()
+        do{
+            try userLogin()
+        }catch {
+            self.labelMessage.text = "Login break"
+            
+        }
         //performSegue 用虛擬物件做view傳輸，如果有button可以直接建立連線不用使用此行
-        performSegue(withIdentifier: "ARView", sender: nil)
+        
     }
     
     //Login send parameters
@@ -76,6 +81,7 @@ class ViewController: UIViewController {
                     //change label text
                     OperationQueue.main.addOperation {
                         self.labelMessage.text = self.user.usersecurity + " Login!!"
+                        self.performSegue(withIdentifier: "ARView", sender: nil)
                     }
                 }else{
                     OperationQueue.main.addOperation {

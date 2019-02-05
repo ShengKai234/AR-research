@@ -10,6 +10,7 @@ import UIKit
 import ARKit
 import Foundation
 
+
 class ARViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var sceneView: ARSCNView!
@@ -24,7 +25,10 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
     private var currentNode: SCNNode?
     var user = User(username: "", userid: 0, usersecurity: "",  usermail: "")
     var virtualObjs: [VirtualObj] = []
+    
+    //Data from database
     var objJSONArray:[AnyObject] = [AnyObject]()
+    
     //var virtualObj = VirtualObj()
     //圖片辨識模型動作變數
     lazy var fadeAction: SCNAction = {
@@ -37,7 +41,7 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
     
     //物件建立於場景的初始化，以及影像辨識對應的物件
     lazy var ColumnNode: SCNNode = {
-        guard let scene = SCNScene(named: "cube.scn"),
+        guard let scene = SCNScene(named: "417.scn"),
             let node = scene.rootNode.childNode(withName: "box_node", recursively: false) else { return SCNNode() }
         return node
     }()
@@ -85,7 +89,7 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
     //------------------------------------------------
     
     
-    //--------------------------------------AR偵測（辨識）系統
+//--------------------------------------AR偵測（辨識）系統
     func resetTrackingCongiguration()
     {
         //識別圖片加載，並辨視攝影機照射之影像，如果沒有辨識到預先輸入圖片則return
@@ -105,8 +109,9 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         //label.text = "Move Camera around tp detect images"
         //DataPicker()
     }
+//------------------------------------------------------------------------------------------
     
-    
+//----------------------------------------date、time----------------------------------------
     let now:Date = Date()
     let formatter = DateFormatter()
     @IBAction func DataPicker(_ sender: UIDatePicker)
@@ -146,20 +151,27 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         }
     }
     
+//---------------------------------操作DB撈取模型資訊-----------------------------------------
     func getObjDate()
     {
         self.virtualObjs.removeAll()
         for objJSON in self.objJSONArray
         {
-
-            if let objJSON = objJSON as? [String: String]
+            if let objJSON = objJSON as? [String: Any]
             {
-                self.virtualObjs.append(VirtualObj(objname: objJSON["ObjName"] as! String,
-                                                   dateStart: objJSON["DateStart"] as! String,
-                                                   dateEnd: objJSON["DateEnd"] as! String,
+                //print(objJSON)
+                self.virtualObjs.append(VirtualObj(id: objJSON["Id"] as! String,
+                                                   code: objJSON["Code"] as! String,
+                                                   objname: objJSON["ProjectName"] as! String,
+                                                   dateStart: objJSON["StartDate"] as! String,
+                                                   dateEnd: objJSON["EndDate"] as! String,
                                                    isStart: objJSON["IsStart"] as! String,
                                                    isCheck: objJSON["IsCheck"] as! String,
-                                                   type: objJSON["type"] as! String))
+                                                   checkType: objJSON["CheckType"] as! String,
+                                                   progress: objJSON["Progress"] as! String,
+                                                   superItem: objJSON["SuperItem"] as! String,
+                                                   superModel: objJSON["SuperModel"] as! String,
+                                                   duration: objJSON["Duration"] as! String))
             }
         }
         formatter.dateFormat = "yyyy/MM/dd"
@@ -168,7 +180,9 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         for virtualObj in self.virtualObjs
         {
             let boxDateStart = formatter.date(from: virtualObj.dateStart)
-            let boxDateEnd = formatter.date(from: virtualObj.dateEnd)
+            var boxDateEnd = formatter.date(from: virtualObj.dateEnd)
+            boxDateEnd = Calendar.current.date(byAdding: .day, value: 1, to: boxDateEnd!)
+//            print(boxDateEnd)
             //if boxDateStart later sender(select Date())
             if(now.compare(boxDateStart!) == .orderedAscending && virtualObj.isStart == "0")
             {
@@ -200,7 +214,6 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
     
     //------------------------------------------------
     
-    //---------------------------------操作DB撈取模型資訊
     //getObjInfo Button --> queryObjInfo --> getObjDate
     func queryObjInfo()
     {
@@ -221,11 +234,9 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
                 return
             }
             let responseJSON = try! JSONSerialization.jsonObject(with: data, options: [])
-            //print(responseJSON)
+//            print(responseJSON)
             if let responseJSON = responseJSON as? [AnyObject] {
-                
                 self.objJSONArray = responseJSON as [AnyObject]
-                
             }
             OperationQueue.main.addOperation {
                 self.getObjDate()
@@ -236,13 +247,51 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
     }
     //----------------------------------------------------
     
+    //queryObjInfo_improvement Button --> queryObjInfo_improvement --> getObjDate
+    func queryObjInfo_improvement()
+    {
+        //URL
+        var request = URLRequest(url: URL(string: "http://140.118.5.33/xampp/getObjInfo.improvement.php")!)
+        
+        //Method
+        request.httpMethod = "GET"
+        
+        //Parameters
+        let postString = ""
+        request.httpBody = postString.data(using: .utf8)
+        
+        //Http request
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print(error?.localizedDescription ?? "No data")
+                return
+            }
+            let responseJSON = try! JSONSerialization.jsonObject(with: data, options: [])
+            //            print(responseJSON)
+            if let responseJSON = responseJSON as? [AnyObject] {
+                self.objJSONArray = responseJSON as [AnyObject]
+            }
+            OperationQueue.main.addOperation {
+                self.getObjDate()
+            }
+            
+        }
+        task.resume()
+    }
+    //----------------------------------------------------
     
+    //btn get info
     @IBAction func getObjInfo(_ sender: Any) {
         queryObjInfo()
     }
     
+    @IBAction func getObjInfo_improvement(_ sender: Any) {
+        queryObjInfo_improvement()
+    }
     
-    //--------------------------------------點擊模型事件，參數傳遞
+    
+    
+//--------------------------------------點擊模型事件，參數傳遞------------------------------------------------
     private var selectNode: SCNNode?
     func addTapGestureToSceneView()
     {
@@ -288,15 +337,18 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
             }
         }
     }
-    //------------------------------------------------
+//-----------------------------------------------------------------------------------------------------
     
     
-    //Obj Info View----------------------------------------------------------------------------------------
-    var ObjInfo: VirtualObj = VirtualObj(objname: "", dateStart: "", dateEnd: "", isStart: "", isCheck: "", type: "")
+//Obj Info View----------------------------------------------------------------------------------------
+    var ObjInfo: VirtualObj = VirtualObj(id: "", code: "", objname: "", dateStart: "", dateEnd: "", isStart: "", isCheck: "", checkType: "", progress: "", superItem: "", superModel: "", duration: "")
+    
+    //受影響工項
+    var effects:[String] = [String]()
     
     @IBAction func btnVewClose(_ sender: Any) {
         ObjInfoView.isHidden=true
-        self.ObjInfo = VirtualObj(objname: "", dateStart: "", dateEnd: "", isStart: "", isCheck: "", type: "")
+        self.ObjInfo = VirtualObj(id: "", code: "", objname: "", dateStart: "", dateEnd: "", isStart: "", isCheck: "", checkType: "", progress: "", superItem: "", superModel: "", duration: "")
     }
     
     
@@ -308,7 +360,9 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
     @IBOutlet weak var switchStart: UISwitch!
     @IBOutlet weak var switchCheck: UISwitch!
     @IBOutlet weak var tableCheckItrm: UITableView!
+    @IBOutlet weak var effectItem: UILabel!
     @IBAction func btnShowCheck(_ sender: Any) {
+        queryCheckType()
         tableCheckItrm.isHidden = false
     }
     
@@ -331,15 +385,13 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         }
     }
     
-    
     @IBOutlet weak var progressSingle: UIProgressView!
-    @IBOutlet weak var progressAll: UIView!
-    @IBAction func btnUpdate(_ sender: Any) {
-    }
+    @IBOutlet weak var progressAll: UIProgressView!
     
-   
+    
     
     func getObjInfo(){
+        effects.removeAll()
         for virtualObj in self.virtualObjs
         {
             if (selectNode?.name == virtualObj.objname)
@@ -382,6 +434,40 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
                     labelCheck.text = "尚未查核"
                 }
                 
+                //effect item
+//                var effects:[String] = [String]()
+                var allCountSingle:Float = 0
+                var CountSingleCheck:Float = 0
+                var allCountCheck:Float = 0
+                for effectObj in self.virtualObjs{
+                    if virtualObj.code == effectObj.superItem && !(self.effects.contains(effectObj.id)){
+                        self.effects.append(effectObj.id)
+                    }
+                    if effectObj.code == virtualObj.code{
+                        allCountSingle+=1
+                        if effectObj.isCheck=="1"{
+                            CountSingleCheck+=1
+                        }
+                    }
+                    if effectObj.isCheck=="1"{
+                        allCountCheck+=1
+                    }
+                }
+                for effect in self.effects{
+                    for effectObj in self.virtualObjs{
+                        if effectObj.id==effect{
+                            for other_effectObj in self.virtualObjs{
+                                if effectObj.code == other_effectObj.superItem && !(self.effects.contains(other_effectObj.id)){
+                                    print (other_effectObj.id)
+                                    self.effects.append(other_effectObj.id)
+                                }
+                            }
+                        }
+                    }
+                }
+                progressSingle.progress = Float(CountSingleCheck/allCountSingle)
+                progressAll.progress = Float(allCountCheck/Float(self.virtualObjs.count))
+                effectItem.text = self.effects.joined(separator:",")
                 
                 break
             }else{
@@ -390,14 +476,19 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         }
     }
     
-    //---------------------------模型資訊上傳、更新
+    //---------------------------模型資訊上傳、更新------------------------
     @IBAction func btnUpdateInfo(_ sender: Any) {
+        updateInfo()
+    }
+    func updateInfo(){
         //URL
         var request = URLRequest(url: URL(string: "http://140.118.5.33/xampp/updateObjInfo.php")!)
         
         //Method
         request.httpMethod = "POST"
-        
+        //print(self.ObjInfo.objname)
+        //print(self.ObjInfo.isStart)
+        //print(self.ObjInfo.isCheck)
         //Parameters
         let postString = "isStart=\(String(self.ObjInfo.isStart))&isCheck=\(String(self.ObjInfo.isCheck))&objName=\(String(self.ObjInfo.objname))"
         request.httpBody = postString.data(using: .utf8)
@@ -410,27 +501,226 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
             }
             let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
             print(responseJSON)
+            OperationQueue.main.addOperation {
+                self.queryObjInfo()
+            }
+        }
+        task.resume()
+    }
+    //------------------------------------------------------
+    
+    //顯示影響工項
+    @IBAction func btnShowEffects(_ sender: Any) {
+        presentBeEffects()
+    }
+    func presentBeEffects(){
+        for virtualObj in self.virtualObjs{
+            for effect in self.effects
+            {
+                if effect == virtualObj.id
+                {
+                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = false
+                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.orange
+                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.orange
+                    break
+                }
+                    //                else if virtualObj.isCheck=="1"{
+                    //                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = false
+                    //                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                    //                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.green
+                    //                }
+                    //                else if virtualObj.isStart=="1"{
+                    //                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = false
+                    //                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.yellow
+                    //                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.yellow
+                    //                }
+                else{
+                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = false
+                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.gray
+                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.gray
+                }
+            }
+        }
+        selectNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+        selectNode?.geometry?.firstMaterial?.emission.contents = UIColor.red
+    }
+    
+    //btn update be effected schedule
+    let dateComponentsFormatter = DateComponentsFormatter()
+    @IBAction func btnSchedule(_ sender: Any) {
+        var autoFormattedDifference = ""
+        presentBeEffects()
+        //取得目前db時間
+//        queryObjInfo()
+        
+        dateComponentsFormatter.allowedUnits = [.day]
+        
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        if ObjInfo.isCheck == "0"{
+            print (ObjInfo.objname)
+            print (ObjInfo.dateStart)
+            print (ObjInfo.dateEnd)
+            
+            let dateStart = formatter.date(from: ObjInfo.dateStart)
+            let dateEnd = formatter.date(from: ObjInfo.dateEnd)
+            //時間差計算
+            autoFormattedDifference = dateComponentsFormatter.string(from: dateEnd!, to: now)!
+            var calculatedDateEnd = Calendar.current.date(byAdding: .day, value: Int((autoFormattedDifference as! NSString).intValue), to: dateEnd!)
+            ObjInfo.dateEnd = formatter.string(from: calculatedDateEnd!)
+            print ("Over schedule Day : ")
+            print(autoFormattedDifference)
+            print(ObjInfo.dateEnd)
+        }
+        
+        for virtualObj in self.virtualObjs{
+            for effect in self.effects{
+                if effect == virtualObj.id || virtualObj.code == ObjInfo.code
+                {
+                    print("__________effect Item : " + effect)
+                    print("__________origin Start : " + virtualObj.dateStart)
+                    print("__________origin End : " + virtualObj.dateEnd)
+                    let dateStart = formatter.date(from: virtualObj.dateStart)
+                    let dateEnd = formatter.date(from: virtualObj.dateEnd)
+                    var calculatedDateStart = Calendar.current.date(byAdding: .day, value: Int((autoFormattedDifference as! NSString).intValue), to: dateStart!)
+                    var calculatedDateEnd = Calendar.current.date(byAdding: .day, value: Int((autoFormattedDifference as! NSString).intValue), to: dateEnd!)
+                    print(formatter.string(from: calculatedDateStart!))
+                    print(formatter.string(from: calculatedDateEnd!))
+                    virtualObj.dateStart = formatter.string(from: calculatedDateStart!)
+                    virtualObj.dateEnd = formatter.string(from: calculatedDateEnd!)
+                }
+            }
+            
+        }
+        
+        updateAllInfo()
+    }
+    
+    func updateAllInfo(){
+        
+        var jsons: [String: Any] = [String: Any]()
+        var json: [[String: Any]] = [[String: Any]]()
+        for virtualObj in self.virtualObjs {
+            json.append(["ProjectName":virtualObj.objname ,"StartDate":virtualObj.dateStart, "EndDate":virtualObj.dateEnd])
+        }
+        jsons["Data"] = json
+        print(jsons)
+        print("-------------!!")
+        //URL
+        var request = URLRequest(url: URL(string: "http://140.118.5.33/xampp/updateAllDate_improvement.php")!)
+        
+        //Method
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        //Parameters
+        //        let postString = "isStart=\(String(self.ObjInfo.isStart))&isCheck=\(String(self.ObjInfo.isCheck))&objName=\(String(self.ObjInfo.objname))"
+        
+        
+        //        let jsonData = try? JSONSerialization.data(withJSONObject: jsons, options: [])
+        //        print(jsonData)
+        request.httpBody = try? JSONSerialization.data(withJSONObject: jsons, options: JSONSerialization.WritingOptions())
+        //
+        //        //Http request
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print(error?.localizedDescription ?? "No data")
+                return
+            }
+            let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
+            print(responseJSON)
+            print("~~~~~~")
+            OperationQueue.main.addOperation {
+//                self.queryObjInfo()
+            }
+        }
+        task.resume()
+    }
+    
+    
+//-------------------------------------------------------Obj info view end-----------------------------
+    
+//查驗項目---------------------------------------From btnShowCheck----------------------
+    var checkNameJSONArray:[AnyObject] = [AnyObject]()
+    var listCheckName:[String] = [String]()
+    var checkStatusJSONArray:[AnyObject] = [AnyObject]()
+    var listCheckStatus:[String] = [String]()
+    var listCheckBool:[Bool] = [Bool]()
+    @IBAction func btnCloseTable(_ sender: Any) {
+        tableCheckItrm.isHidden = true
+    }
+    func queryCheckType(){
+        //URL
+        var request = URLRequest(url: URL(string: "http://140.118.5.33/xampp/getCheckInfo.php")!)
+        
+        //Method
+        request.httpMethod = "POST"
+        
+        //Parameters
+        print(self.ObjInfo.checkType)
+        let postString = "checkNameType=\(String(self.ObjInfo.checkType))"
+        request.httpBody = postString.data(using: .utf8)
+        
+        //Http request
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print(error?.localizedDescription ?? "No data")
+                return
+            }
+            let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
+            if let responseJSON = responseJSON as? [String: Any] {
+//                print(responseJSON["checkName"])
+//                print(responseJSON["checkStatus"])
+                if let responseJSON = responseJSON["checkName"] as? [AnyObject] {
+                    self.checkNameJSONArray = responseJSON as [AnyObject]
+                }
+                if let responseJSON = responseJSON["checkStatus"] as? [AnyObject] {
+                    self.checkStatusJSONArray = responseJSON as [AnyObject]
+                }
+                OperationQueue.main.addOperation {
+                    self.listCheckName.removeAll()
+                    for checkItems in self.checkNameJSONArray{
+                        if let checkItems = checkItems as? [String: Any]
+                        {
+                            for checkItem in checkItems{
+                                if checkItem.key != "Id" {
+                                    self.listCheckName.append(checkItem.value as! String)
+                                }
+                                print(self.listCheckName)
+                            }
+                        }
+                    }
+                    self.listCheckStatus.removeAll()
+                    for checkItems in self.checkStatusJSONArray{
+                        if let checkItems = checkItems as? [String: Any]
+                        {
+                            for checkItem in checkItems{
+                                if checkItem.key != "Id" {
+                                    self.listCheckStatus.append(checkItem.value as! String)
+                                }
+                                print(self.listCheckStatus)
+                            }
+                        }
+                    }
+//                    for checkStatus in self.listCheckStatus{
+//                        if checkStatus == "1"{self.listCheckBool.append(true)}
+//                        else{self.listCheckBool.append(false)}
+//                    }
+                    self.tableCheckItrm.reloadData()
+                }
+            }
             
         }
         task.resume()
     }
-    //----------------------------------------------
     
-    //查驗項目---------------------------------------
-    
-    
-    @IBAction func btnCloseTable(_ sender: Any) {
-        tableCheckItrm.isHidden = true
-    }
-    var listCheckitem = ["鋼筋組立間距", "鋼筋搭接長度", "鋼筋保護層厚度", "預留筋配置之間距、號數", "鋼筋隔間器之配置"]
-    var listCheckIsDone = [false, false, false, false, false]
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return listCheckitem.count
+        return listCheckName.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellIdentifier = "Cell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        cell.textLabel?.text = listCheckitem[indexPath.row]
+        cell.textLabel?.text = listCheckName[indexPath.row] + listCheckStatus[indexPath.row]
+        if listCheckStatus[indexPath.row] == "1"{cell.accessoryType = .checkmark}else{cell.accessoryType = .none}
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -443,16 +733,26 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
 
             let cell = tableView.cellForRow(at: indexPath)
             cell?.accessoryType = .checkmark
-            self.listCheckIsDone[indexPath.row] = true
+//            self.listCheckBool[indexPath.row] = true
+            self.listCheckStatus[indexPath.row] = "1"
+            print(self.listCheckStatus)
+            self.tableCheckItrm.reloadData()
         })
         optionMenu.addAction(checkAction)
         
+//        let updateAction = UIAlertAction(title: "Update All Check Status", style: .default, handler: {
+//            (action: UIAlertAction!) -> Void in
+//            
+//            
+//        })
+//        optionMenu.addAction(cancelAction)
+        
+        self.tableCheckItrm.reloadData()
         present(optionMenu, animated: true, completion: nil)
     }
-    
     //----------------------------------------------
     
-    //------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
 }
 
 

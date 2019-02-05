@@ -9,7 +9,7 @@
 import Foundation
 
 class DbOperation{
-    var virtualObjs: [VirtualObj] = [VirtualObj(objname: "", dateStart: "", dateEnd: "", isStart: "", isCheck: "", type: "")]
+    var virtualObjs: [VirtualObj] = [VirtualObj(id: "",code: "", objname: "", dateStart: "", dateEnd: "", isStart: "", isCheck: "", checkType: "", progress: "", superItem: "", superModel: "", duration: "")]
 
     init(){}
     func queryObjInfo()->[VirtualObj]
@@ -36,15 +36,15 @@ class DbOperation{
                 for obj in responseJSON
                 {
                     print(responseJSON[0]["ObjId"])
-                    var responseObj = VirtualObj(objname: obj["ObjName"] as! String,
-                                                dateStart: obj["DateStart"] as! String,
-                                                dateEnd: obj["DateEnd"] as! String,
-                                                isStart: obj["IsStart"] as! String,
-                                                isCheck: obj["IsCheck"] as! String,
-                                                type: obj["type"] as! String
-                                                )
+//                    var responseObj = VirtualObj(objname: obj["ObjName"] as! String,
+//                                                dateStart: obj["DateStart"] as! String,
+//                                                dateEnd: obj["DateEnd"] as! String,
+//                                                isStart: obj["IsStart"] as! String,
+//                                                isCheck: obj["IsCheck"] as! String,
+//                                                type: obj["type"] as! String
+//                                                )
                     
-                    self.virtualObjs.append(responseObj as VirtualObj)
+//                    self.virtualObjs.append(responseObj as VirtualObj)
                 }
             }
         }

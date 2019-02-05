@@ -20,7 +20,7 @@ class VirtualObjectViewController: UIViewController {
     @IBOutlet weak var progress: UIProgressView!
     @IBOutlet weak var showProgress: UILabel!
     
-    var virtualObj: VirtualObj = VirtualObj(objname: "", dateStart: "", dateEnd: "", isStart: "", isCheck: "", type: "")
+    var virtualObj: VirtualObj = VirtualObj(id: "", code: "", objname: "", dateStart: "", dateEnd: "", isStart: "", isCheck: "", checkType: "", progress: "", superItem: "", superModel: "", duration: "")
     var name: String = ""
     var dateStart: String = ""
     var dateEnd: String = ""

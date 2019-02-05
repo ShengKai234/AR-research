@@ -9,9 +9,25 @@
 import Foundation
 class VirtualObj{
     
-    private var _objname, _dateStart, _dateEnd, _type: String
+    private var _id ,_code, _objname, _dateStart, _dateEnd, _checkType, _progress, _superItem, _superModel, _duration: String
     private var _isStart, _isCheck: String
     
+    var id: String {
+        get {
+            return self._id
+        }
+        set(newValue) {
+            self._id = newValue
+        }
+    }
+    var code: String {
+        get {
+            return self._code
+        }
+        set(newValue) {
+            self._code = newValue
+        }
+    }
     var objname: String {
         get {
             return self._objname
@@ -52,21 +68,60 @@ class VirtualObj{
             self._isCheck = newValue
         }
     }
-    var type: String {
+    var checkType: String {
         get {
-            return self._type
+            return self._checkType
         }
         set {
-            self._type = newValue
+            self._checkType = newValue
+        }
+    }
+    var progress: String {
+        get {
+            return self._progress
+        }
+        set {
+            self._progress = newValue
+        }
+    }
+    var superItem: String {
+        get {
+            return self._superItem
+        }
+        set {
+            self._superItem = newValue
+        }
+    }
+    var superModel: String {
+        get {
+            return self._superModel
+        }
+        set {
+            self._superModel = newValue
+        }
+    }
+    var duration: String {
+        get {
+            return self._duration
+        }
+        set {
+            self._duration = newValue
         }
     }
     
-    init(objname: String, dateStart: String, dateEnd: String, isStart: String, isCheck: String, type: String){
+    
+    init(id: String, code: String, objname: String, dateStart: String, dateEnd: String, isStart: String, isCheck: String, checkType: String, progress: String, superItem:String, superModel:String, duration:String){
+        self._id = id
+        self._code = code
         self._objname = objname
         self._dateStart = dateStart
         self._dateEnd = dateEnd
         self._isStart = isStart
         self._isCheck = isCheck
-        self._type = type
+        self._checkType = checkType
+        self._progress = progress
+        self._superItem = superItem
+        self._superModel = superModel
+        self._duration = duration
     }
 }
