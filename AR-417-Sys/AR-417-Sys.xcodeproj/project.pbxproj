@@ -23,6 +23,7 @@
 		2ACA7DFF21C0AA5900AEDF97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ACA7DFE21C0AA5900AEDF97 /* Assets.xcassets */; };
 		2ACA7E0221C0AA5900AEDF97 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2ACA7E0021C0AA5900AEDF97 /* LaunchScreen.storyboard */; };
 		2ACA7E0B21C0B8F600AEDF97 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACA7E0A21C0B8F600AEDF97 /* User.swift */; };
+		2ADA69C52219903400A861B1 /* WorkSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADA69C42219903400A861B1 /* WorkSchedule.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		2ACA7E0121C0AA5900AEDF97 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2ACA7E0321C0AA5900AEDF97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2ACA7E0A21C0B8F600AEDF97 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		2ADA69C42219903400A861B1 /* WorkSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkSchedule.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 			children = (
 				2ACA7E0A21C0B8F600AEDF97 /* User.swift */,
 				2A67A6C421C345D500B0A6E9 /* VirtualObj.swift */,
+				2ADA69C42219903400A861B1 /* WorkSchedule.swift */,
 			);
 			path = domain;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				2A67A6CD21C6143700B0A6E9 /* CheckListViewController.swift in Sources */,
 				2ACA7DF821C0AA5800AEDF97 /* AppDelegate.swift in Sources */,
 				2A67A6C521C345D500B0A6E9 /* VirtualObj.swift in Sources */,
+				2ADA69C52219903400A861B1 /* WorkSchedule.swift in Sources */,
 				2A67A6CB21C6087900B0A6E9 /* VirtualObjectViewController.swift in Sources */,
 				2A67A6C721C4E29500B0A6E9 /* DbOperation.swift in Sources */,
 				2ACA7E0B21C0B8F600AEDF97 /* User.swift in Sources */,
@@ -382,6 +386,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 695STBBDBF;
 				INFOPLIST_FILE = "AR-417-Sys/Info.plist";
@@ -391,6 +396,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kaiARkit417.AR-417-Sys";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -400,6 +406,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 695STBBDBF;
 				INFOPLIST_FILE = "AR-417-Sys/Info.plist";
@@ -409,6 +416,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kaiARkit417.AR-417-Sys";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

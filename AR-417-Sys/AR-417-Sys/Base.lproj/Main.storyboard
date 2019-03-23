@@ -115,29 +115,36 @@
                                     <action selector="DataPicker:" destination="v0G-Oq-FIh" eventType="valueChanged" id="Z5P-YB-acK"/>
                                 </connections>
                             </datePicker>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o9c-Ey-TE1">
-                                <rect key="frame" x="302" y="685" width="53" height="44"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bpS-eH-hBy">
+                                <rect key="frame" x="196" y="633" width="159" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                <state key="normal" title="動態進度下載"/>
+                                <connections>
+                                    <action selector="getObjInfo_dynamic:" destination="v0G-Oq-FIh" eventType="touchUpInside" id="Wo5-6Y-1LL"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o9c-Ey-TE1">
+                                <rect key="frame" x="196" y="680" width="159" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.9370916485786438" green="0.93694382905960083" blue="0.95754462480545044" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
-                                <state key="normal" title="下載"/>
+                                <state key="normal" title="預定進度下載"/>
                                 <connections>
                                     <action selector="getObjInfo:" destination="v0G-Oq-FIh" eventType="touchUpInside" id="gs8-tV-Tug"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bpS-eH-hBy">
-                                <rect key="frame" x="223" y="633" width="132" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="26"/>
-                                <state key="normal" title="下載新進度"/>
-                                <connections>
-                                    <action selector="getObjInfo_improvement:" destination="v0G-Oq-FIh" eventType="touchUpInside" id="H9y-IG-iBl"/>
-                                </connections>
-                            </button>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dea-ff-0uX">
-                                <rect key="frame" x="0.0" y="88" width="375" height="641"/>
+                            <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dea-ff-0uX">
+                                <rect key="frame" x="0.0" y="88" width="375" height="415"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HGd-BC-Pat">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="(模型進度版本)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VrN-c0-gDc">
+                                        <rect key="frame" x="129" y="1" width="117" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="模型名稱" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HGd-BC-Pat">
                                         <rect key="frame" x="70" y="30" width="235" height="29"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                         <nil key="textColor"/>
@@ -258,7 +265,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </progressView>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KjK-h1-ttc">
-                                        <rect key="frame" x="126" y="445" width="123" height="36"/>
+                                        <rect key="frame" x="126" y="423" width="123" height="36"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <state key="normal" title="檢視查驗項目"/>
@@ -280,7 +287,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DXF-nM-vGG">
-                                        <rect key="frame" x="126" y="489" width="123" height="36"/>
+                                        <rect key="frame" x="126" y="467" width="123" height="36"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <state key="normal" title="顯示影響工項"/>
@@ -289,7 +296,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8pO-Ps-Cr0">
-                                        <rect key="frame" x="134" y="533" width="106" height="44"/>
+                                        <rect key="frame" x="134" y="543" width="106" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="26"/>
@@ -298,17 +305,27 @@
                                             <action selector="btnSchedule:" destination="v0G-Oq-FIh" eventType="touchUpInside" id="xrL-fJ-hdg"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hD7-cb-dCX">
+                                        <rect key="frame" x="144" y="511" width="86" height="38"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                        <state key="normal" title="選擇照片"/>
+                                        <connections>
+                                            <action selector="btnSelectPhoto:" destination="v0G-Oq-FIh" eventType="touchUpInside" id="1oO-7i-ozc"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="HGd-BC-Pat" secondAttribute="trailing" constant="70" id="0if-hc-wVb"/>
                                     <constraint firstItem="9Ka-Wd-1HG" firstAttribute="top" secondItem="7Ha-G4-xL2" secondAttribute="bottom" constant="20" id="1mc-Ak-0c3"/>
-                                    <constraint firstItem="HGd-BC-Pat" firstAttribute="top" secondItem="dea-ff-0uX" secondAttribute="top" constant="30" id="554-rh-fFu"/>
                                     <constraint firstAttribute="bottom" secondItem="gIM-fn-F5w" secondAttribute="bottom" constant="10" id="5u9-Nk-Mgc"/>
                                     <constraint firstItem="ZfH-Qj-yjJ" firstAttribute="top" secondItem="n09-ap-5OU" secondAttribute="bottom" constant="14" id="6bw-fH-wFT"/>
                                     <constraint firstItem="VtE-G4-nGB" firstAttribute="top" secondItem="dea-ff-0uX" secondAttribute="top" constant="100" id="7Ai-AW-i44"/>
                                     <constraint firstItem="uQ8-hw-b6W" firstAttribute="leading" secondItem="9Ka-Wd-1HG" secondAttribute="trailing" constant="15" id="AER-Kv-tmD"/>
                                     <constraint firstItem="9DL-DL-kVT" firstAttribute="leading" secondItem="D8n-kx-80I" secondAttribute="trailing" constant="15" id="CjQ-E5-Qg5"/>
+                                    <constraint firstAttribute="trailing" secondItem="VrN-c0-gDc" secondAttribute="trailing" constant="129" id="Cua-e9-Vk6"/>
+                                    <constraint firstItem="VrN-c0-gDc" firstAttribute="leading" secondItem="dea-ff-0uX" secondAttribute="leading" constant="129" id="DKP-ds-9Lk"/>
                                     <constraint firstItem="uQ8-hw-b6W" firstAttribute="top" secondItem="ZfH-Qj-yjJ" secondAttribute="bottom" constant="17" id="HIx-Kf-13j"/>
                                     <constraint firstItem="s1p-9D-14I" firstAttribute="top" secondItem="YXM-PN-dhk" secondAttribute="bottom" constant="20" id="Hux-Hw-E82"/>
                                     <constraint firstItem="jey-cx-eXe" firstAttribute="leading" secondItem="dea-ff-0uX" secondAttribute="leading" constant="50" id="IFe-I0-C5v"/>
@@ -321,6 +338,7 @@
                                     <constraint firstItem="E1b-ES-6Ub" firstAttribute="top" secondItem="ZfH-Qj-yjJ" secondAttribute="bottom" constant="10" id="Y34-Jk-Zbo"/>
                                     <constraint firstItem="YXM-PN-dhk" firstAttribute="top" secondItem="c1w-nJ-gKC" secondAttribute="bottom" constant="20" id="YJq-Cl-Y9h"/>
                                     <constraint firstItem="c1w-nJ-gKC" firstAttribute="leading" secondItem="dea-ff-0uX" secondAttribute="leading" constant="50" id="ZR5-uO-Lzg"/>
+                                    <constraint firstItem="HGd-BC-Pat" firstAttribute="top" secondItem="VrN-c0-gDc" secondAttribute="bottom" constant="8" id="aJ8-FO-U0O"/>
                                     <constraint firstItem="n09-ap-5OU" firstAttribute="leading" secondItem="VtE-G4-nGB" secondAttribute="trailing" constant="15" id="auN-4Y-jnd"/>
                                     <constraint firstItem="7Ha-G4-xL2" firstAttribute="leading" secondItem="dea-ff-0uX" secondAttribute="leading" constant="50" id="f21-ny-i92"/>
                                     <constraint firstItem="HGd-BC-Pat" firstAttribute="leading" secondItem="dea-ff-0uX" secondAttribute="leading" constant="70" id="gP9-QU-fYr"/>
@@ -337,7 +355,7 @@
                                 </constraints>
                             </view>
                             <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="Cell" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ktg-ye-PMU">
-                                <rect key="frame" x="0.0" y="85" width="375" height="727"/>
+                                <rect key="frame" x="0.0" y="88" width="375" height="724"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <button key="tableFooterView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="2KK-jF-Jyx">
@@ -365,6 +383,14 @@
                                     <outlet property="delegate" destination="v0G-Oq-FIh" id="uf8-9r-JDV"/>
                                 </connections>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qnP-ms-QSp">
+                                <rect key="frame" x="22" y="693" width="37" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="截圖"/>
+                                <connections>
+                                    <action selector="btnTakePhoto:" destination="v0G-Oq-FIh" eventType="touchUpInside" id="axy-ew-LY7"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -378,8 +404,6 @@
                             <constraint firstItem="dea-ff-0uX" firstAttribute="trailing" secondItem="l6b-D7-Ng9" secondAttribute="trailing" id="SNE-SL-yLG"/>
                             <constraint firstItem="PmN-XW-DRX" firstAttribute="leading" secondItem="l6b-D7-Ng9" secondAttribute="leading" id="ZtB-tu-zcQ"/>
                             <constraint firstItem="coi-Yt-wTa" firstAttribute="leading" secondItem="l6b-D7-Ng9" secondAttribute="leading" constant="181" id="cxR-7W-4xD"/>
-                            <constraint firstItem="l6b-D7-Ng9" firstAttribute="trailing" secondItem="o9c-Ey-TE1" secondAttribute="trailing" constant="20" id="dCf-Sz-FKi"/>
-                            <constraint firstItem="l6b-D7-Ng9" firstAttribute="bottom" secondItem="o9c-Ey-TE1" secondAttribute="bottom" id="gKQ-wj-JTa"/>
                             <constraint firstItem="TN3-aa-8UF" firstAttribute="leading" secondItem="l6b-D7-Ng9" secondAttribute="leading" constant="77" id="gW4-xx-KMk"/>
                             <constraint firstItem="YYW-ID-9Tz" firstAttribute="trailing" secondItem="l6b-D7-Ng9" secondAttribute="trailing" id="guI-ta-pov"/>
                             <constraint firstItem="TN3-aa-8UF" firstAttribute="top" secondItem="l6b-D7-Ng9" secondAttribute="top" id="nN9-wg-YQv"/>
@@ -398,6 +422,7 @@
                         <outlet property="fieldEndDate" destination="ZfH-Qj-yjJ" id="Ydn-Lr-aCr"/>
                         <outlet property="fieldStartDate" destination="n09-ap-5OU" id="dYG-1K-SAZ"/>
                         <outlet property="labelCheck" destination="D8n-kx-80I" id="feR-ZX-f2A"/>
+                        <outlet property="labelModelType" destination="VrN-c0-gDc" id="8eB-E0-Mh8"/>
                         <outlet property="labelStart" destination="uQ8-hw-b6W" id="KyF-AX-bDq"/>
                         <outlet property="permisonLabel" destination="TN3-aa-8UF" id="aaI-oC-cPk"/>
                         <outlet property="progressAll" destination="dYI-yf-lX8" id="owj-20-cc3"/>

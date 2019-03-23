@@ -11,7 +11,7 @@ import ARKit
 import Foundation
 
 
-class ARViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class ARViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     @IBOutlet weak var sceneView: ARSCNView!
     var saveSceneView: ARSCNView!
@@ -24,7 +24,9 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
     let waitDuration: TimeInterval = 3600
     private var currentNode: SCNNode?
     var user = User(username: "", userid: 0, usersecurity: "",  usermail: "")
-    var virtualObjs: [VirtualObj] = []
+    var workSchedules: [WorkSchedule] = []
+    var workSchedules_origin: [WorkSchedule] = []
+    var modelType = "123"
     
     //Data from database
     var objJSONArray:[AnyObject] = [AnyObject]()
@@ -119,34 +121,34 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         formatter.dateFormat = "yyyy/MM/dd"
         //        label_time.text = formatter.string(from: sender.date)
         
-        for virtualObj in self.virtualObjs
+        for workSchedule in self.workSchedules
         {
-            let boxDateStart = formatter.date(from: virtualObj.dateStart)
-            let boxDateEnd = formatter.date(from: virtualObj.dateEnd)
+            let boxDateStart = formatter.date(from: workSchedule.startDate)
+            let boxDateEnd = formatter.date(from: workSchedule.endDate)
             //if boxDateStart later sender(select Date())
-            if(now.compare(boxDateStart!) == .orderedAscending && virtualObj.isStart == "0")
+            if(now.compare(boxDateStart!) == .orderedAscending && workSchedule.isStart == "0")
             {
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = false
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.blue
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.isHidden = false
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.blue
                 if (sender.date < (boxDateStart!)) {
-                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = true
+                    currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.isHidden = true
                 }
                 //else if sender(select Date()) later boxDateStart and is check
-            }else if(virtualObj.isCheck == "1" && virtualObj.isStart == "1"){
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = false
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.green
+            }else if(workSchedule.isCheck == "1" && workSchedule.isStart == "1"){
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.isHidden = false
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.green
                 //else if sender(select Date()) later boxDateStart and is start doing
-            }else if((virtualObj.isStart == "1" && sender.date.compare(boxDateEnd!) == .orderedAscending) || (virtualObj.isStart == "1" && sender.date.compare(boxDateEnd!) == .orderedSame)){
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = false
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.yellow
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.yellow
+            }else if((workSchedule.isStart == "1" && sender.date.compare(boxDateEnd!) == .orderedAscending) || (workSchedule.isStart == "1" && sender.date.compare(boxDateEnd!) == .orderedSame)){
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.isHidden = false
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.yellow
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.yellow
                 //else sender(select Date()) later boxDateStart and is start doing and sender later boxDateEnd
             }else{
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = false
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.red
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.isHidden = false
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.red
             }
         }
     }
@@ -154,59 +156,66 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
 //---------------------------------操作DB撈取模型資訊-----------------------------------------
     func getObjDate()
     {
-        self.virtualObjs.removeAll()
+        self.workSchedules.removeAll()
         for objJSON in self.objJSONArray
         {
             if let objJSON = objJSON as? [String: Any]
             {
                 //print(objJSON)
-                self.virtualObjs.append(VirtualObj(id: objJSON["Id"] as! String,
-                                                   code: objJSON["Code"] as! String,
-                                                   objname: objJSON["ProjectName"] as! String,
-                                                   dateStart: objJSON["StartDate"] as! String,
-                                                   dateEnd: objJSON["EndDate"] as! String,
-                                                   isStart: objJSON["IsStart"] as! String,
-                                                   isCheck: objJSON["IsCheck"] as! String,
-                                                   checkType: objJSON["CheckType"] as! String,
+                self.workSchedules.append(WorkSchedule(id: objJSON["Id"] as! String,
+                                                   scheduleId: objJSON["scheduleId"] as! String,
+                                                   projectName: objJSON["ProjectName"] as! String,
+                                                   startDate: objJSON["StartDate"] as! String,
+                                                   endDate: objJSON["EndDate"] as! String,
                                                    progress: objJSON["Progress"] as! String,
                                                    superItem: objJSON["SuperItem"] as! String,
-                                                   superModel: objJSON["SuperModel"] as! String,
-                                                   duration: objJSON["Duration"] as! String))
+                                                   duration: objJSON["Duration"] as! String,
+                                                   superModelGroupId: objJSON["SuperModelGroupId"] as! String,
+                                                   modelName: objJSON["ModelName"] as! String,
+                                                   groupId: objJSON["GroupId"] as! String,
+                                                   isStart: objJSON["IsStart"] as! String,
+                                                   isCheck: objJSON["IsCheck"] as! String,
+                                                   checkTypeNo: objJSON["CheckTypeNo"] as! String,
+                                                   superCheckNo: objJSON["SuperCheckNo"] as! String))
             }
+        }
+        if (modelType=="origin"){
+            self.workSchedules_origin = self.workSchedules
         }
         formatter.dateFormat = "yyyy/MM/dd"
         //        label_time.text = formatter.string(from: sender.date)
         
-        for virtualObj in self.virtualObjs
+        for workSchedule in self.workSchedules
         {
-            let boxDateStart = formatter.date(from: virtualObj.dateStart)
-            var boxDateEnd = formatter.date(from: virtualObj.dateEnd)
+            let boxDateStart = formatter.date(from: workSchedule.startDate)
+            var boxDateEnd = formatter.date(from: workSchedule.endDate)
             boxDateEnd = Calendar.current.date(byAdding: .day, value: 1, to: boxDateEnd!)
 //            print(boxDateEnd)
             //if boxDateStart later sender(select Date())
-            if(now.compare(boxDateStart!) == .orderedAscending && virtualObj.isStart == "0")
+            currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.transparency = 0.5
+            if(now.compare(boxDateStart!) == .orderedAscending && workSchedule.isStart == "0")
             {
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = false
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.blue
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.isHidden = false
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.blue
                 if (now.compare(boxDateStart!) == .orderedAscending) {
-                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = true
+                    currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.isHidden = true
                 }
                 //else if sender(select Date()) later boxDateStart and is check
-            }else if(virtualObj.isCheck == "1" && virtualObj.isStart == "1"){
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = false
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.green
+            }else if(workSchedule.isCheck == "1" && workSchedule.isStart == "1"){
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.isHidden = false
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.green
                 //else if sender(select Date()) later boxDateStart and is start doing
-            }else if((virtualObj.isStart == "1" && now.compare(boxDateEnd!) == .orderedAscending) || (virtualObj.isStart == "1" && now.compare(boxDateEnd!) == .orderedSame)){
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = false
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.yellow
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.yellow
+            }else if((workSchedule.isStart == "1" && now.compare(boxDateEnd!) == .orderedAscending) || (workSchedule.isStart == "1" && now.compare(boxDateEnd!) == .orderedSame)){
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.isHidden = false
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.yellow
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.yellow
                 //else sender(select Date()) later boxDateStart and is start doing and sender later boxDateEnd
             }else{
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = false
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-                currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.red
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.isHidden = false
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.red
             }
         }
         
@@ -240,6 +249,7 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
             }
             OperationQueue.main.addOperation {
                 self.getObjDate()
+                
             }
             
         }
@@ -248,10 +258,10 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
     //----------------------------------------------------
     
     //queryObjInfo_improvement Button --> queryObjInfo_improvement --> getObjDate
-    func queryObjInfo_improvement()
+    func queryObjInfo_dynamic()
     {
         //URL
-        var request = URLRequest(url: URL(string: "http://140.118.5.33/xampp/getObjInfo.improvement.php")!)
+        var request = URLRequest(url: URL(string: "http://140.118.5.33/xampp/getObjInfo_dynamic.php")!)
         
         //Method
         request.httpMethod = "GET"
@@ -267,12 +277,12 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
                 return
             }
             let responseJSON = try! JSONSerialization.jsonObject(with: data, options: [])
-            //            print(responseJSON)
             if let responseJSON = responseJSON as? [AnyObject] {
                 self.objJSONArray = responseJSON as [AnyObject]
             }
             OperationQueue.main.addOperation {
                 self.getObjDate()
+                
             }
             
         }
@@ -282,14 +292,21 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
     
     //btn get info
     @IBAction func getObjInfo(_ sender: Any) {
+        self.modelType = "origin"
         queryObjInfo()
     }
     
-    @IBAction func getObjInfo_improvement(_ sender: Any) {
-        queryObjInfo_improvement()
+    @IBAction func getObjInfo_dynamic(_ sender: Any) {
+        self.modelType = "dynamic"
+        queryObjInfo_dynamic()
     }
     
     
+    @IBAction func btnTakePhoto(_ sender: Any) {
+        
+        
+
+    }
     
 //--------------------------------------點擊模型事件，參數傳遞------------------------------------------------
     private var selectNode: SCNNode?
@@ -309,49 +326,27 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         //performSegue 用虛擬物件做view傳輸，如果有button可以直接建立連線不用使用此行
             //performSegue(withIdentifier: "ShowObjInfo", sender: nil)
         //Open Obj Info
+        
         ObjInfoView.isHidden=false
         getObjInfo()
         
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "ShowObjInfo" {
-            let destinationController = segue.destination as! VirtualObjectViewController
-            var progressCount: Float = 0
-            for virtualObj in self.virtualObjs
-            {
-                if (virtualObj.isCheck == "1") {
-                    progressCount += 1.0
-                }
-            }
-            for virtualObj in self.virtualObjs
-            {
-                if (selectNode?.name == virtualObj.objname)
-                {
-                    destinationController.virtualObj = virtualObj
-                    destinationController.permsion = user.usersecurity
-                    destinationController.progressCount = progressCount
-                    break
-                }
-            }
-        }
-    }
 //-----------------------------------------------------------------------------------------------------
-    
-    
+
 //Obj Info View----------------------------------------------------------------------------------------
-    var ObjInfo: VirtualObj = VirtualObj(id: "", code: "", objname: "", dateStart: "", dateEnd: "", isStart: "", isCheck: "", checkType: "", progress: "", superItem: "", superModel: "", duration: "")
+    var ObjInfo: WorkSchedule = WorkSchedule(id: "", scheduleId: "", projectName: "", startDate: "", endDate: "", progress: "", superItem: "", duration: "", superModelGroupId: "", modelName: "", groupId: "", isStart: "", isCheck: "", checkTypeNo: "", superCheckNo: "")
     
     //受影響工項
     var effects:[String] = [String]()
     
     @IBAction func btnVewClose(_ sender: Any) {
         ObjInfoView.isHidden=true
-        self.ObjInfo = VirtualObj(id: "", code: "", objname: "", dateStart: "", dateEnd: "", isStart: "", isCheck: "", checkType: "", progress: "", superItem: "", superModel: "", duration: "")
+        self.ObjInfo = WorkSchedule(id: "", scheduleId: "", projectName: "", startDate: "", endDate: "", progress: "", superItem: "", duration: "", superModelGroupId: "", modelName: "", groupId: "", isStart: "", isCheck: "", checkTypeNo: "", superCheckNo: "")
     }
     
     
+    @IBOutlet weak var labelModelType: UILabel!
     @IBOutlet weak var ObjName: UILabel!
     @IBOutlet weak var fieldStartDate: UITextField!
     @IBOutlet weak var fieldEndDate: UITextField!
@@ -364,6 +359,32 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
     @IBAction func btnShowCheck(_ sender: Any) {
         queryCheckType()
         tableCheckItrm.isHidden = false
+    }
+    
+    //開啟相簿--------------------------------------------------------------------------------------------------------------
+    @IBAction func btnSelectPhoto(_ sender: UIButton) {
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.delegate = self
+        
+        //設定顯示模式
+        imagePicker.modalPresentationStyle = .popover
+        let popover = imagePicker.popoverPresentationController
+        //設定popover視窗與哪一個view元件關聯
+        popover?.sourceView = sender
+        
+        //popoverㄐ的箭頭位置
+        popover?.sourceRect = sender.bounds
+        popover?.permittedArrowDirections = .any
+        
+        show(imagePicker, sender: self)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any])
+    {
+        let selectImage = info[.originalImage] as? UIImage
+        
+        print(selectImage as Any)
     }
     
     @IBAction func switchStart(_ sender: UISwitch) {
@@ -392,14 +413,33 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
     
     func getObjInfo(){
         effects.removeAll()
-        for virtualObj in self.virtualObjs
+        var i = 0
+        for workSchedule in self.workSchedules
         {
-            if (selectNode?.name == virtualObj.objname)
+            if (selectNode?.name == workSchedule.modelName)
             {
-                ObjInfo = virtualObj
-                self.ObjName.text = ObjInfo.objname
-                fieldStartDate.text = ObjInfo.dateStart
-                fieldEndDate.text = ObjInfo.dateEnd
+                ObjInfo = workSchedule
+                if (self.modelType == "origin"){
+                    self.labelModelType.text = "原始進度"
+                }else if (self.modelType == "dynamic"){
+                    self.labelModelType.text = "動態進度"
+                    //與原計劃時間比較
+                    let boxDateEnd = formatter.date(from: workSchedules_origin[i].endDate)
+                    print("__________123" + workSchedules_origin[i].endDate)
+                    if (boxDateEnd!.compare(now) == .orderedAscending && workSchedule.isCheck=="0"){
+                        let alertController = UIAlertController(title: "AR系统提示",
+                                                                message: "該工項已經延遲於預定計畫！！", preferredStyle: .alert)
+                        let okAction = UIAlertAction(title: "確定", style: .default, handler: {
+                            action in
+                        })
+                        alertController.addAction(okAction)
+                        self.present(alertController, animated: true, completion: nil)
+                    }
+                }
+                
+                self.ObjName.text = ObjInfo.modelName
+                fieldStartDate.text = ObjInfo.startDate
+                fieldEndDate.text = ObjInfo.endDate
                 if (user.usersecurity=="engineer") {
                     fieldStartDate.isEnabled = true
                     fieldEndDate.isEnabled = true
@@ -439,40 +479,41 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
                 var allCountSingle:Float = 0
                 var CountSingleCheck:Float = 0
                 var allCountCheck:Float = 0
-                for effectObj in self.virtualObjs{
-                    if virtualObj.code == effectObj.superItem && !(self.effects.contains(effectObj.id)){
-                        self.effects.append(effectObj.id)
+                for effectSchedule in self.workSchedules{
+                    if workSchedule.id == effectSchedule.superItem && !(self.effects.contains(effectSchedule.id)){
+                        self.effects.append(effectSchedule.id)
                     }
-                    if effectObj.code == virtualObj.code{
+                    if effectSchedule.id == workSchedule.id{
                         allCountSingle+=1
-                        if effectObj.isCheck=="1"{
+                        if effectSchedule.isCheck=="1"{
                             CountSingleCheck+=1
                         }
                     }
-                    if effectObj.isCheck=="1"{
+                    if effectSchedule.isCheck=="1"{
                         allCountCheck+=1
                     }
                 }
                 for effect in self.effects{
-                    for effectObj in self.virtualObjs{
-                        if effectObj.id==effect{
-                            for other_effectObj in self.virtualObjs{
-                                if effectObj.code == other_effectObj.superItem && !(self.effects.contains(other_effectObj.id)){
-                                    print (other_effectObj.id)
-                                    self.effects.append(other_effectObj.id)
+                    for effectSchedule in self.workSchedules{
+                        if effectSchedule.id==effect{
+                            for other_effectSchedule in self.workSchedules{
+                                if effectSchedule.id == other_effectSchedule.superItem && !(self.effects.contains(other_effectSchedule.id)){
+                                    print (other_effectSchedule.id)
+                                    self.effects.append(other_effectSchedule.id)
                                 }
                             }
                         }
                     }
                 }
                 progressSingle.progress = Float(CountSingleCheck/allCountSingle)
-                progressAll.progress = Float(allCountCheck/Float(self.virtualObjs.count))
+                progressAll.progress = Float(allCountCheck/Float(self.workSchedules.count))
                 effectItem.text = self.effects.joined(separator:",")
                 
                 break
             }else{
                 ObjName.text = "Nothing"
             }
+            i+=1
         }
     }
     
@@ -481,8 +522,9 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         updateInfo()
     }
     func updateInfo(){
+        
         //URL
-        var request = URLRequest(url: URL(string: "http://140.118.5.33/xampp/updateObjInfo.php")!)
+        var request = URLRequest(url: URL(string: "http://140.118.5.33/xampp/updateCheckStatus_origin.php")!)
         
         //Method
         request.httpMethod = "POST"
@@ -490,7 +532,7 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         //print(self.ObjInfo.isStart)
         //print(self.ObjInfo.isCheck)
         //Parameters
-        let postString = "isStart=\(String(self.ObjInfo.isStart))&isCheck=\(String(self.ObjInfo.isCheck))&objName=\(String(self.ObjInfo.objname))"
+        let postString = "isStart=\(String(self.ObjInfo.isStart))&isCheck=\(String(self.ObjInfo.isCheck))&id=\(String(self.ObjInfo.scheduleId))"
         request.httpBody = postString.data(using: .utf8)
         
         //Http request
@@ -514,14 +556,14 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         presentBeEffects()
     }
     func presentBeEffects(){
-        for virtualObj in self.virtualObjs{
+        for workSchedule in self.workSchedules{
             for effect in self.effects
             {
-                if effect == virtualObj.id
+                if effect == workSchedule.id
                 {
-                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = false
-                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.orange
-                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.orange
+                    currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.isHidden = false
+                    currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.orange
+                    currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.orange
                     break
                 }
                     //                else if virtualObj.isCheck=="1"{
@@ -535,9 +577,9 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
                     //                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.yellow
                     //                }
                 else{
-                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.isHidden = false
-                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.gray
-                    currentNode?.childNode(withName: virtualObj.objname, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.gray
+                    currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.isHidden = false
+                    currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.diffuse.contents = UIColor.gray
+                    currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.gray
                 }
             }
         }
@@ -558,56 +600,82 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         formatter.dateFormat = "yyyy-MM-dd"
         
         if ObjInfo.isCheck == "0"{
-            print (ObjInfo.objname)
-            print (ObjInfo.dateStart)
-            print (ObjInfo.dateEnd)
+            print (ObjInfo.modelName)
+            print (ObjInfo.startDate)
+            print (ObjInfo.endDate)
             
-            let dateStart = formatter.date(from: ObjInfo.dateStart)
-            let dateEnd = formatter.date(from: ObjInfo.dateEnd)
+            let dateStart = formatter.date(from: ObjInfo.startDate)
+            let dateEnd = formatter.date(from: ObjInfo.endDate)
             //時間差計算
             autoFormattedDifference = dateComponentsFormatter.string(from: dateEnd!, to: now)!
             var calculatedDateEnd = Calendar.current.date(byAdding: .day, value: Int((autoFormattedDifference as! NSString).intValue), to: dateEnd!)
-            ObjInfo.dateEnd = formatter.string(from: calculatedDateEnd!)
+            ObjInfo.endDate = formatter.string(from: calculatedDateEnd!)
             print ("Over schedule Day : ")
             print(autoFormattedDifference)
-            print(ObjInfo.dateEnd)
+            print(ObjInfo.endDate)
         }
         
-        for virtualObj in self.virtualObjs{
+        for workSchedule in self.workSchedules{
             for effect in self.effects{
-                if effect == virtualObj.id || virtualObj.code == ObjInfo.code
+                if effect == workSchedule.id || workSchedule.id == ObjInfo.id
                 {
                     print("__________effect Item : " + effect)
-                    print("__________origin Start : " + virtualObj.dateStart)
-                    print("__________origin End : " + virtualObj.dateEnd)
-                    let dateStart = formatter.date(from: virtualObj.dateStart)
-                    let dateEnd = formatter.date(from: virtualObj.dateEnd)
+                    print("__________origin Start : " + workSchedule.startDate)
+                    print("__________origin End : " + workSchedule.endDate)
+                    let dateStart = formatter.date(from: workSchedule.startDate)
+                    let dateEnd = formatter.date(from: workSchedule.endDate)
                     var calculatedDateStart = Calendar.current.date(byAdding: .day, value: Int((autoFormattedDifference as! NSString).intValue), to: dateStart!)
                     var calculatedDateEnd = Calendar.current.date(byAdding: .day, value: Int((autoFormattedDifference as! NSString).intValue), to: dateEnd!)
                     print(formatter.string(from: calculatedDateStart!))
                     print(formatter.string(from: calculatedDateEnd!))
-                    virtualObj.dateStart = formatter.string(from: calculatedDateStart!)
-                    virtualObj.dateEnd = formatter.string(from: calculatedDateEnd!)
+                    workSchedule.startDate = formatter.string(from: calculatedDateStart!)
+                    workSchedule.endDate = formatter.string(from: calculatedDateEnd!)
                 }
             }
             
         }
+        if(user.usersecurity=="supervision" && self.modelType=="origin"){
+            let alertController = UIAlertController(title: "AR系统提示",
+                                                    message: "您确定要更新" + self.labelModelType.text! + "嗎？", preferredStyle: .alert)
+            let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+            let okAction = UIAlertAction(title: "更新", style: .default, handler: {
+                action in
+                self.updateInfo_origin()
+            })
+            alertController.addAction(cancelAction)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            
+        }
+        else if (user.usersecurity=="engineer" && self.modelType=="dynamic"){
+            let alertController = UIAlertController(title: "AR系统提示",
+                                                    message: "您确定要更新" + self.labelModelType.text! + "嗎？", preferredStyle: .alert)
+            let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+            let okAction = UIAlertAction(title: "更新", style: .default, handler: {
+                action in
+                self.updateInfo_dynamic()
+            })
+            alertController.addAction(cancelAction)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+            
+        }
         
-        updateAllInfo()
+        
     }
     
-    func updateAllInfo(){
+    func updateInfo_origin(){
         
         var jsons: [String: Any] = [String: Any]()
         var json: [[String: Any]] = [[String: Any]]()
-        for virtualObj in self.virtualObjs {
-            json.append(["ProjectName":virtualObj.objname ,"StartDate":virtualObj.dateStart, "EndDate":virtualObj.dateEnd])
+        for workSchedule in self.workSchedules {
+            json.append(["Id":workSchedule.superCheckNo ,"StartDate":workSchedule.startDate, "EndDate":workSchedule.endDate])
         }
         jsons["Data"] = json
         print(jsons)
         print("-------------!!")
         //URL
-        var request = URLRequest(url: URL(string: "http://140.118.5.33/xampp/updateAllDate_improvement.php")!)
+        var request = URLRequest(url: URL(string: "http://140.118.5.33/xampp/updateInfo_origin.php")!)
         
         //Method
         request.httpMethod = "POST"
@@ -630,7 +698,61 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
             print(responseJSON)
             print("~~~~~~")
             OperationQueue.main.addOperation {
+                let alertController = UIAlertController(title: "AR系统提示",
+                                                        message: "更新完成", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "確認", style: .default, handler: {
+                    action in
+                })
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
 //                self.queryObjInfo()
+            }
+        }
+        task.resume()
+    }
+    
+    func updateInfo_dynamic(){
+        
+        var jsons: [String: Any] = [String: Any]()
+        var json: [[String: Any]] = [[String: Any]]()
+        for workSchedule in self.workSchedules {
+            json.append(["Id":workSchedule.id ,"StartDate":workSchedule.startDate, "EndDate":workSchedule.endDate])
+        }
+        jsons["Data"] = json
+        print(jsons)
+        print("-------------!!")
+        //URL
+        var request = URLRequest(url: URL(string: "http://140.118.5.33/xampp/updateInfo_dynamic.php")!)
+        
+        //Method
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        //Parameters
+        //        let postString = "isStart=\(String(self.ObjInfo.isStart))&isCheck=\(String(self.ObjInfo.isCheck))&objName=\(String(self.ObjInfo.objname))"
+        
+        
+        //        let jsonData = try? JSONSerialization.data(withJSONObject: jsons, options: [])
+        //        print(jsonData)
+        request.httpBody = try? JSONSerialization.data(withJSONObject: jsons, options: JSONSerialization.WritingOptions())
+        //
+        //        //Http request
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print(error?.localizedDescription ?? "No data")
+                return
+            }
+            let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
+            print(responseJSON)
+            print("~~~~~~")
+            OperationQueue.main.addOperation {
+                let alertController = UIAlertController(title: "AR系统提示",
+                                                        message: "更新完成", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "確認", style: .default, handler: {
+                    action in
+                })
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+                //                self.queryObjInfo()
             }
         }
         task.resume()
@@ -656,8 +778,8 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         request.httpMethod = "POST"
         
         //Parameters
-        print(self.ObjInfo.checkType)
-        let postString = "checkNameType=\(String(self.ObjInfo.checkType))"
+        print(self.ObjInfo.checkTypeNo)
+        let postString = "checkNameType=\(String(self.ObjInfo.checkTypeNo))"
         request.httpBody = postString.data(using: .utf8)
         
         //Http request
@@ -724,7 +846,7 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let optionMenu = UIAlertController(title: nil, message: "Waht do you want to do?", preferredStyle: .actionSheet)
+        let optionMenu = UIAlertController(title: nil, message: "請選擇要執行的動作", preferredStyle: .actionSheet)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         optionMenu.addAction(cancelAction)
         
@@ -739,7 +861,17 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
             self.tableCheckItrm.reloadData()
         })
         optionMenu.addAction(checkAction)
-        
+        let photoLibraryAction = UIAlertAction(title: "照片庫", style: .default , handler: {
+            (ACTION)in
+            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
+                let imagePicker = UIImagePickerController()
+                imagePicker.allowsEditing = false
+                imagePicker.sourceType = .photoLibrary
+                
+                self.present(imagePicker, animated: true, completion: nil)
+            }
+        })
+        optionMenu.addAction(photoLibraryAction)
 //        let updateAction = UIAlertAction(title: "Update All Check Status", style: .default, handler: {
 //            (action: UIAlertAction!) -> Void in
 //            
