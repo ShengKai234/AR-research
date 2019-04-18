@@ -356,6 +356,7 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
     @IBOutlet weak var switchCheck: UISwitch!
     @IBOutlet weak var tableCheckItrm: UITableView!
     @IBOutlet weak var effectItem: UILabel!
+    @IBOutlet weak var txt_photoNum: UILabel!
     @IBAction func btnShowCheck(_ sender: Any) {
         queryCheckType()
         tableCheckItrm.isHidden = false
@@ -373,18 +374,88 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         //設定popover視窗與哪一個view元件關聯
         popover?.sourceView = sender
         
-        //popoverㄐ的箭頭位置
+        //popover的箭頭位置
         popover?.sourceRect = sender.bounds
         popover?.permittedArrowDirections = .any
         
         show(imagePicker, sender: self)
     }
     
+    var imageURLs:[URL] = []
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any])
     {
+        // 直接取得圖片
         let selectImage = info[.originalImage] as? UIImage
         
-        print(selectImage as Any)
+        // 取得圖片URL 絕對路徑
+        imageURLs.append((info[UIImagePickerController.InfoKey.imageURL] as? URL)!)
+        txt_photoNum.text = String(imageURLs.count)
+        // URL to UIImage
+        //let data = try! Data(contentsOf: imageURL!)
+        //viewImage.image = UIImage(data: data)
+        
+        // Image to Data
+        //let imageData = viewImage.image!.pngData()
+        //print(imageData)
+        dismiss(animated: true, completion: nil)
+    }
+    
+    // 照片上傳--------------------------------------------------------------------------------------------------------------
+    
+    @IBAction func btn_uploadImg(_ sender: Any) {
+        upload_photo()
+    }
+    func upload_photo(){
+        
+        var jsons: [String: Any] = [String: Any]()
+        var json: [[String: Any]] = [[String: Any]]()
+        for url in imageURLs {
+            let data = try! Data(contentsOf: url)
+            let imageStr:String  = (UIImage(data: data)?.jpegData(compressionQuality: 1)?.base64EncodedString())!
+            json.append(["modelId": self.ObjInfo.id,
+                         "modelName": self.ObjInfo.modelName,
+                         "projectId": self.ObjInfo.scheduleId,
+                         "base64": imageStr])
+        }
+        
+        jsons["Data"] = json
+        //        print(jsons)
+        print("-------------!!")
+        //URL
+        var request = URLRequest(url: URL(string: "http://140.118.5.33/xampp/uploadProjectPhoto.php")!)
+        
+        //Method
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        //Parameters
+        //        let postString = "isStart=\(String(self.ObjInfo.isStart))&isCheck=\(String(self.ObjInfo.isCheck))&objName=\(String(self.ObjInfo.objname))"
+        
+        
+        //        let jsonData = try? JSONSerialization.data(withJSONObject: jsons, options: [])
+        //        print(jsonData)
+        request.httpBody = try? JSONSerialization.data(withJSONObject: jsons, options: JSONSerialization.WritingOptions())
+        //
+        //        //Http request
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print(error?.localizedDescription ?? "No data")
+                return
+            }
+            let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
+            print(responseJSON)
+            print("~~~~~~")
+            OperationQueue.main.addOperation {
+                let alertController = UIAlertController(title: "AR系统提示",
+                                                        message: "更新完成", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "確認", style: .default, handler: {
+                    action in
+                })
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+                //                self.queryObjInfo()
+            }
+        }
+        task.resume()
     }
     
     @IBAction func switchStart(_ sender: UISwitch) {
@@ -762,26 +833,36 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
 //-------------------------------------------------------Obj info view end-----------------------------
     
 //查驗項目---------------------------------------From btnShowCheck----------------------
+    var checkJSONArray:[String:Any] = [String:Any]()
     var checkNameJSONArray:[AnyObject] = [AnyObject]()
     var listCheckName:[String] = [String]()
     var checkStatusJSONArray:[AnyObject] = [AnyObject]()
-    var listCheckStatus:[String] = [String]()
+    var listCheckStatus:[Int] = [Int]()
     var listCheckBool:[Bool] = [Bool]()
     @IBAction func btnCloseTable(_ sender: Any) {
         tableCheckItrm.isHidden = true
     }
     func queryCheckType(){
+        self.checkJSONArray = Macro.getCheckList(checkTypeNo: self.ObjInfo.checkTypeNo, superCheckNo: self.ObjInfo.superCheckNo)
+//        print("__11111")
+//        print(Macro.getCheckList(checkTypeNo: self.ObjInfo.checkTypeNo, superCheckNo: self.ObjInfo.superCheckNo))
+//        print(self.checkJSONArray)
         //URL
-        var request = URLRequest(url: URL(string: "http://140.118.5.33/xampp/getCheckInfo.php")!)
-        
+        var request = URLRequest(url: URL(string: "http://140.118.5.33/xampp/getCheckList.php")!)
+
         //Method
         request.httpMethod = "POST"
-        
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         //Parameters
-        print(self.ObjInfo.checkTypeNo)
-        let postString = "checkNameType=\(String(self.ObjInfo.checkTypeNo))"
-        request.httpBody = postString.data(using: .utf8)
-        
+//        print(self.ObjInfo.checkTypeNo)
+//        let postString = "checkTypeNo=\(String(self.ObjInfo.checkTypeNo))&superCheckNo=\(String(self.ObjInfo.superCheckNo))"
+//        request.httpBody = postString.data(using: .utf8)
+        var json: [String: Any] = [String: Any]()
+        json["checkTypeNo"] = self.ObjInfo.checkTypeNo
+        json["superCheckNo"] = self.ObjInfo.superCheckNo
+        request.httpBody = try? JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions())
+
+
         //Http request
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
@@ -789,48 +870,61 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
                 return
             }
             let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
+            // 取得傳回的JSON "checkList"
             if let responseJSON = responseJSON as? [String: Any] {
-//                print(responseJSON["checkName"])
-//                print(responseJSON["checkStatus"])
-                if let responseJSON = responseJSON["checkName"] as? [AnyObject] {
-                    self.checkNameJSONArray = responseJSON as [AnyObject]
-                }
-                if let responseJSON = responseJSON["checkStatus"] as? [AnyObject] {
-                    self.checkStatusJSONArray = responseJSON as [AnyObject]
+                // 取得傳回的JSON "checkList" 中的資料，並傳入 self.checkJSONArray
+                if let responseJSON = responseJSON["checkList"] as? [String: Any] {
+                    self.checkJSONArray = responseJSON
                 }
                 OperationQueue.main.addOperation {
                     self.listCheckName.removeAll()
-                    for checkItems in self.checkNameJSONArray{
-                        if let checkItems = checkItems as? [String: Any]
-                        {
-                            for checkItem in checkItems{
-                                if checkItem.key != "Id" {
-                                    self.listCheckName.append(checkItem.value as! String)
-                                }
-                                print(self.listCheckName)
-                            }
-                        }
-                    }
                     self.listCheckStatus.removeAll()
-                    for checkItems in self.checkStatusJSONArray{
-                        if let checkItems = checkItems as? [String: Any]
-                        {
-                            for checkItem in checkItems{
-                                if checkItem.key != "Id" {
-                                    self.listCheckStatus.append(checkItem.value as! String)
-                                }
-                                print(self.listCheckStatus)
-                            }
-                        }
+                    if let checkName = self.checkJSONArray["CheckItemName1"] as? String{
+                        self.listCheckName.append(checkName)
+                        self.listCheckStatus.append(self.checkJSONArray["CheckStatus1"] as! Int)
                     }
-//                    for checkStatus in self.listCheckStatus{
-//                        if checkStatus == "1"{self.listCheckBool.append(true)}
-//                        else{self.listCheckBool.append(false)}
-//                    }
+                    if let checkName = self.checkJSONArray["CheckItemName2"] as? String{
+                        self.listCheckName.append(checkName)
+                        self.listCheckStatus.append(self.checkJSONArray["CheckStatus2"] as! Int)
+                    }
+                    if let checkName = self.checkJSONArray["CheckItemName3"] as? String{
+                        self.listCheckName.append(checkName)
+                        self.listCheckStatus.append(self.checkJSONArray["CheckStatus3"] as! Int)
+                    }
+                    if let checkName = self.checkJSONArray["CheckItemName4"] as? String{
+                        self.listCheckName.append(checkName)
+                        self.listCheckStatus.append(self.checkJSONArray["CheckStatus4"] as! Int)
+                    }
+                    if let checkName = self.checkJSONArray["CheckItemName5"] as? String{
+                        self.listCheckName.append(checkName)
+                        self.listCheckStatus.append(self.checkJSONArray["CheckStatus5"] as! Int)
+                    }
+                    if let checkName = self.checkJSONArray["CheckItemName6"] as? String{
+                        self.listCheckName.append(checkName)
+                        self.listCheckStatus.append(self.checkJSONArray["CheckStatus6"] as! Int)
+                    }
+                    if let checkName = self.checkJSONArray["CheckItemName7"] as? String{
+                        self.listCheckName.append(checkName)
+                        self.listCheckStatus.append(self.checkJSONArray["CheckStatus7"] as! Int)
+                    }
+                    if let checkName = self.checkJSONArray["CheckItemName8"] as? String{
+                        self.listCheckName.append(checkName)
+                        self.listCheckStatus.append(self.checkJSONArray["CheckStatus8"] as! Int)
+                    }
+                    if let checkName = self.checkJSONArray["CheckItemName9"] as? String{
+                        self.listCheckName.append(checkName)
+                        self.listCheckStatus.append(self.checkJSONArray["CheckStatus9"] as! Int)
+                    }
+                    if let checkName = self.checkJSONArray["CheckItemName10"] as? String{
+                        self.listCheckName.append(checkName)
+                        self.listCheckStatus.append(self.checkJSONArray["CheckStatus10"] as! Int)
+                    }
+
+                    print(self.listCheckName)
                     self.tableCheckItrm.reloadData()
                 }
             }
-            
+
         }
         task.resume()
     }
@@ -841,8 +935,8 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellIdentifier = "Cell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        cell.textLabel?.text = listCheckName[indexPath.row] + listCheckStatus[indexPath.row]
-        if listCheckStatus[indexPath.row] == "1"{cell.accessoryType = .checkmark}else{cell.accessoryType = .none}
+        cell.textLabel?.text = listCheckName[indexPath.row]
+        if listCheckStatus[indexPath.row] == 1{cell.accessoryType = .checkmark}else{cell.accessoryType = .none}
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -856,7 +950,7 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
             let cell = tableView.cellForRow(at: indexPath)
             cell?.accessoryType = .checkmark
 //            self.listCheckBool[indexPath.row] = true
-            self.listCheckStatus[indexPath.row] = "1"
+            self.listCheckStatus[indexPath.row] = 1
             print(self.listCheckStatus)
             self.tableCheckItrm.reloadData()
         })

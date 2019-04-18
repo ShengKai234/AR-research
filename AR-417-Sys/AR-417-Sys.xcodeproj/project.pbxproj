@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A1BCB9C2263A34000BD11D2 /* Macro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1BCB9B2263A34000BD11D2 /* Macro.swift */; };
 		2A5DCE1921DC6E29006E5E92 /* 417.scn in Resources */ = {isa = PBXBuildFile; fileRef = 2A5DCE1821DC6E28006E5E92 /* 417.scn */; };
 		2A67A6BB21C2374400B0A6E9 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A67A6BA21C2374400B0A6E9 /* ARViewController.swift */; };
 		2A67A6C021C23D8100B0A6E9 /* cube.scn in Resources */ = {isa = PBXBuildFile; fileRef = 2A67A6BD21C23D8100B0A6E9 /* cube.scn */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A1BCB9B2263A34000BD11D2 /* Macro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Macro.swift; sourceTree = "<group>"; };
 		2A5DCE1821DC6E28006E5E92 /* 417.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = 417.scn; sourceTree = "<group>"; };
 		2A67A6BA21C2374400B0A6E9 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
 		2A67A6BD21C23D8100B0A6E9 /* cube.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = cube.scn; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				2ACA7DFB21C0AA5800AEDF97 /* Main.storyboard */,
 				2A67A6CC21C6143700B0A6E9 /* CheckListViewController.swift */,
 				2A67A6CA21C6087900B0A6E9 /* VirtualObjectViewController.swift */,
+				2A1BCB9B2263A34000BD11D2 /* Macro.swift */,
 				2A67A6BA21C2374400B0A6E9 /* ARViewController.swift */,
 				2ACA7DFE21C0AA5900AEDF97 /* Assets.xcassets */,
 				2ACA7E0021C0AA5900AEDF97 /* LaunchScreen.storyboard */,
@@ -228,6 +231,7 @@
 				2A67A6CD21C6143700B0A6E9 /* CheckListViewController.swift in Sources */,
 				2ACA7DF821C0AA5800AEDF97 /* AppDelegate.swift in Sources */,
 				2A67A6C521C345D500B0A6E9 /* VirtualObj.swift in Sources */,
+				2A1BCB9C2263A34000BD11D2 /* Macro.swift in Sources */,
 				2ADA69C52219903400A861B1 /* WorkSchedule.swift in Sources */,
 				2A67A6CB21C6087900B0A6E9 /* VirtualObjectViewController.swift in Sources */,
 				2A67A6C721C4E29500B0A6E9 /* DbOperation.swift in Sources */,
