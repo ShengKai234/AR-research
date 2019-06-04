@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ARViewController" customModule="AR_417_Simulation_Animation" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KcB-L1-dBU">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                            </arscnView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XOc-87-NbG">
+                                <rect key="frame" x="100" y="802" width="214" height="30"/>
+                                <color key="backgroundColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                <state key="normal" title="DownLoad Data"/>
+                                <connections>
+                                    <action selector="btn_downLoadData:" destination="BYZ-38-t0r" eventType="touchUpInside" id="QRk-qc-b83"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lz5-CW-24i" userLabel="btn_animation">
+                                <rect key="frame" x="100" y="752" width="214" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Start-Animation"/>
+                                <connections>
+                                    <action selector="btn_animation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vaD-bQ-HAt"/>
+                                </connections>
+                            </button>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ipd-ve-QiK" userLabel="label_Time">
+                                <rect key="frame" x="100" y="74" width="214" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="EfU-JF-m3s">
+                                <rect key="frame" x="0.0" y="44" width="414" height="216"/>
+                                <date key="date" timeIntervalSinceReferenceDate="581166828.03246796">
+                                    <!--2019-06-02 11:13:48 +0000-->
+                                </date>
+                            </datePicker>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="XOc-87-NbG" secondAttribute="bottom" constant="30" id="7NZ-EW-pXa"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="lz5-CW-24i" secondAttribute="trailing" constant="100" id="8Q4-xl-J2k"/>
+                            <constraint firstItem="EfU-JF-m3s" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="DEY-ml-Ipj"/>
+                            <constraint firstItem="XOc-87-NbG" firstAttribute="top" secondItem="lz5-CW-24i" secondAttribute="bottom" constant="20" id="G32-MQ-qOz"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ipd-ve-QiK" secondAttribute="trailing" constant="100" id="LdI-la-4kE"/>
+                            <constraint firstItem="ipd-ve-QiK" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="30" id="Pl5-3d-h3g"/>
+                            <constraint firstItem="ipd-ve-QiK" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="100" id="Rum-i9-SyE"/>
+                            <constraint firstItem="lz5-CW-24i" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="100" id="guG-I1-ujT"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="XOc-87-NbG" secondAttribute="trailing" constant="100" id="hbV-zu-ewa"/>
+                            <constraint firstItem="XOc-87-NbG" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="100" id="iTr-l8-8oG"/>
+                            <constraint firstItem="KcB-L1-dBU" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="nAo-N5-oAl"/>
+                            <constraint firstItem="EfU-JF-m3s" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="nQy-js-wRX"/>
+                            <constraint firstItem="KcB-L1-dBU" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="olz-lu-w8N"/>
+                            <constraint firstItem="KcB-L1-dBU" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="pfp-0C-Srs"/>
+                            <constraint firstItem="EfU-JF-m3s" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="qaa-AD-eb7"/>
+                            <constraint firstItem="KcB-L1-dBU" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="yDj-gU-fc6"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="btn_animation" destination="lz5-CW-24i" id="h19-e9-eUU"/>
+                        <outlet property="label_time" destination="ipd-ve-QiK" id="EKW-PL-oEI"/>
+                        <outlet property="pickerdate" destination="EfU-JF-m3s" id="NFn-aC-JM9"/>
+                        <outlet property="sceneView" destination="KcB-L1-dBU" id="UdR-CI-gWi"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="137.68115942028987" y="129.91071428571428"/>
+        </scene>
+    </scenes>
+</document>

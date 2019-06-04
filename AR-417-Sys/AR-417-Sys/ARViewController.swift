@@ -22,7 +22,16 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
     let fadeDuration: TimeInterval = 1
     let rotateDuration: TimeInterval = 3
     let waitDuration: TimeInterval = 3600
+    
+    // 模型
     private var currentNode: SCNNode?
+    private var currentElectromechanicalNode: SCNNode?
+    private var currentFurnitureNode: SCNNode?
+    private var currentStructNode: SCNNode?
+
+    // 顯示警告
+    private var showAlert = false
+    
     var user = User(username: "", userid: 0, usersecurity: "",  usermail: "")
     var workSchedules: [WorkSchedule] = []
     var workSchedules_origin: [WorkSchedule] = []
@@ -47,6 +56,22 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
             let node = scene.rootNode.childNode(withName: "box_node", recursively: false) else { return SCNNode() }
         return node
     }()
+    lazy var ElectromechanicalNode: SCNNode = {
+        guard let scene = SCNScene(named: "417.scn"),
+            let node = scene.rootNode.childNode(withName: "Electromechanical", recursively: false) else { return SCNNode() }
+        return node
+    }()
+    lazy var FurnitureNode: SCNNode = {
+        guard let scene = SCNScene(named: "417.scn"),
+            let node = scene.rootNode.childNode(withName: "Furniture", recursively: false) else { return SCNNode() }
+        return node
+    }()
+    lazy var StructNode: SCNNode = {
+        guard let scene = SCNScene(named: "417.scn"),
+            let node = scene.rootNode.childNode(withName: "Struct", recursively: false) else { return SCNNode() }
+        return node
+    }()
+    
     
     //--------------------------------------場景載入點＿1
     override func viewDidLoad() {
@@ -218,7 +243,6 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
                 currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.geometry?.firstMaterial?.emission.contents = UIColor.red
             }
         }
-        
     }
     
     //------------------------------------------------
@@ -249,7 +273,6 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
             }
             OperationQueue.main.addOperation {
                 self.getObjDate()
-                
             }
             
         }
@@ -282,7 +305,31 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
             }
             OperationQueue.main.addOperation {
                 self.getObjDate()
-                
+                let alertWorkSchedule = Macro.alertScheduleDelate(workSchedules: self.workSchedules_origin)
+                print(alertWorkSchedule?.modelName)
+                if ((alertWorkSchedule) != nil && self.showAlert==false){
+                    let message = alertWorkSchedule!.modelName + " : " + alertWorkSchedule!.projectName + " \n進度延遲！！"
+                    let alertController = UIAlertController(title: "警告",
+                                                            message: message, preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "查看", style: .default, handler: {
+                        action in
+                        
+                        for model in self.currentNode!.childNodes{
+                            model.isHidden = true
+                        }
+                        
+                        for workSchedule in self.workSchedules{
+                            if(alertWorkSchedule!.projectName == workSchedule.projectName){
+                                self.currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.isHidden = false
+                            }else{
+                                self.currentNode?.childNode(withName: workSchedule.modelName, recursively: false)?.isHidden = true
+                            }
+                        }
+                        self.showAlert = true
+                    })
+                    alertController.addAction(okAction)
+                    self.present(alertController, animated: true, completion: nil)
+                }
             }
             
         }
@@ -301,6 +348,85 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         queryObjInfo_dynamic()
     }
     
+    // btn set type of model (Main, Electromechanical, furniture, Struct)
+    @IBAction func btnSetModel(_ sender: Any) {
+        let optionMenu = UIAlertController(title: nil, message: "請選擇要顯示的模型", preferredStyle: .actionSheet)
+        let showAllAction, hideAllAction :UIAlertAction?
+        var showMainAction, showStructAction, showElectromechanicalAction, showFurnitureAction :UIAlertAction?
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+        optionMenu.addAction(cancelAction)
+        
+        showAllAction = UIAlertAction(title: "顯示全部", style: .default, handler: {
+            (action: UIAlertAction!) -> Void in
+            self.currentNode?.isHidden = false
+            self.currentStructNode?.isHidden = false
+            self.currentElectromechanicalNode?.isHidden = false
+            self.currentFurnitureNode?.isHidden = false
+        })
+        optionMenu.addAction(showAllAction!)
+        hideAllAction = UIAlertAction(title: "全部隱藏", style: .default, handler: {
+            (action: UIAlertAction!) -> Void in
+            self.currentNode?.isHidden = true
+            self.currentStructNode?.isHidden = true
+            self.currentElectromechanicalNode?.isHidden = true
+            self.currentFurnitureNode?.isHidden = true
+        })
+        optionMenu.addAction(hideAllAction!)
+        // 時程
+        if (self.currentNode?.isHidden==false){
+            showMainAction = UIAlertAction(title: "隱藏時程模型", style: .default, handler: {
+                (action: UIAlertAction!) -> Void in
+                self.currentNode?.isHidden = true
+            })
+        }else{
+            showMainAction = UIAlertAction(title: "顯示時程模型", style: .default, handler: {
+                (action: UIAlertAction!) -> Void in
+                self.currentNode?.isHidden = false
+            })
+        }
+        optionMenu.addAction(showMainAction!)
+        // 結構
+        if (self.currentStructNode?.isHidden==false){
+            showStructAction = UIAlertAction(title: "隱藏內部結構模型", style: .default, handler: {
+                (action: UIAlertAction!) -> Void in
+                self.currentStructNode?.isHidden = true
+            })
+        }else{
+            showStructAction = UIAlertAction(title: "顯示內部結構模型", style: .default, handler: {
+                (action: UIAlertAction!) -> Void in
+                self.currentStructNode?.isHidden = false
+            })
+        }
+        optionMenu.addAction(showStructAction!)
+        // 機電
+        if (self.currentElectromechanicalNode?.isHidden==false){
+            showElectromechanicalAction = UIAlertAction(title: "隱藏機電模型", style: .default, handler: {
+                (action: UIAlertAction!) -> Void in
+                self.currentElectromechanicalNode?.isHidden = true
+            })
+        }else{
+            showElectromechanicalAction = UIAlertAction(title: "顯示機電模型", style: .default, handler: {
+                (action: UIAlertAction!) -> Void in
+                self.currentElectromechanicalNode?.isHidden = false
+            })
+        }
+        optionMenu.addAction(showElectromechanicalAction!)
+        // 家具
+        if (self.currentFurnitureNode?.isHidden==false){
+            showFurnitureAction = UIAlertAction(title: "隱藏家具模型", style: .default, handler: {
+                (action: UIAlertAction!) -> Void in
+                self.currentFurnitureNode?.isHidden = true
+            })
+        }else{
+            showFurnitureAction = UIAlertAction(title: "顯示家具模型", style: .default, handler: {
+                (action: UIAlertAction!) -> Void in
+                self.currentFurnitureNode?.isHidden = false
+            })
+        }
+        optionMenu.addAction(showFurnitureAction!)
+
+        present(optionMenu, animated: true, completion: nil)
+    }
     
     @IBAction func btnTakePhoto(_ sender: Any) {
         
@@ -966,13 +1092,6 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
             }
         })
         optionMenu.addAction(photoLibraryAction)
-//        let updateAction = UIAlertAction(title: "Update All Check Status", style: .default, handler: {
-//            (action: UIAlertAction!) -> Void in
-//            
-//            
-//        })
-//        optionMenu.addAction(cancelAction)
-        
         self.tableCheckItrm.reloadData()
         present(optionMenu, animated: true, completion: nil)
     }
@@ -996,11 +1115,26 @@ extension ARViewController: ARSCNViewDelegate {
             //                        planeNode.runAction(self.fadeAction)
             node.addChildNode(planeNode)
             
-            // TODO: Overlay 3D Object
-            let overlayNode = self.getNode(withImageName: imageName)
-            overlayNode.opacity = 0
-            overlayNode.runAction(self.fadeAction)
-            node.addChildNode(overlayNode)
+            // TODO: Overlay 3D Object, Main, Electromechanical, 
+            let overlayMainNode = self.getNode(withImageName: imageName, type: "MainModel")
+            overlayMainNode.opacity = 0
+            overlayMainNode.runAction(self.fadeAction)
+            node.addChildNode(overlayMainNode)
+            
+            let overlayElectromechanicalNode = self.getNode(withImageName: imageName, type: "ElectromechanicalModel")
+            overlayElectromechanicalNode.opacity = 0
+            overlayElectromechanicalNode.runAction(self.fadeAction)
+            node.addChildNode(overlayElectromechanicalNode)
+            
+            let overlayFurnitureNode = self.getNode(withImageName: imageName, type: "Furniture")
+            overlayFurnitureNode.opacity = 0
+            overlayFurnitureNode.runAction(self.fadeAction)
+            node.addChildNode(overlayFurnitureNode)
+            
+            let overlayStructNode = self.getNode(withImageName: imageName, type: "Struct")
+            overlayStructNode.opacity = 0
+            overlayStructNode.runAction(self.fadeAction)
+            node.addChildNode(overlayStructNode)
             
             //self.label.text = "Image detected: \"\(imageName)\""
         }
@@ -1013,13 +1147,34 @@ extension ARViewController: ARSCNViewDelegate {
         return node
     }
     
-    func getNode(withImageName name: String) -> SCNNode {
+    func getNode(withImageName name: String, type: String) -> SCNNode {
         var node = SCNNode()
         switch name {
         case "column":
-            node = ColumnNode
-            currentNode = ColumnNode
-            //DataPicker()
+            switch type {
+                case "MainModel":
+                    node = ColumnNode
+                    currentNode = ColumnNode
+                    break
+                case "ElectromechanicalModel":
+                    node = ElectromechanicalNode
+                    currentElectromechanicalNode = ElectromechanicalNode
+                    currentElectromechanicalNode?.isHidden = true
+                    break
+                case "Furniture":
+                    node = FurnitureNode
+                    currentFurnitureNode = FurnitureNode
+                    currentFurnitureNode?.isHidden = true
+                    break
+                case "Struct":
+                    node = StructNode
+                    currentStructNode = StructNode
+                    currentStructNode?.isHidden = true
+                    break
+                default:
+                    break
+            }
+            break
         default:
             break
         }

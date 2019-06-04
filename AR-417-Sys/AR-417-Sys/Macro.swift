@@ -110,4 +110,20 @@ class Macro {
         return checkJSONArray
     }
     
+    static func alertScheduleDelate(workSchedules :[WorkSchedule])-> WorkSchedule? {
+        let formatter = DateFormatter()
+        let now:Date = Date()
+        formatter.dateFormat = "yyyy/MM/dd"
+        for workSchedule in workSchedules
+        {
+            //與原計劃時間比較
+            let boxDateEnd = formatter.date(from: workSchedule.endDate)
+            print("__________boxDateEnd" + workSchedule.modelName + workSchedule.endDate)
+            if (boxDateEnd!.compare(now) == .orderedAscending && workSchedule.isCheck=="0"){
+                print("__________delate" + workSchedule.modelName + workSchedule.endDate)
+                return workSchedule
+            }
+        }
+        return nil
+    }
 }

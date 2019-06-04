@@ -1,0 +1,11 @@
+version: "Apple Swift version 5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
+options: "625960bfb81e9ae161c433672655b6f6"
+build_time: [1559462985, 859294000]
+inputs:
+  "/Users/kai/Desktop/ARkit/AR-research/AR-417-Simulation/AR-417-Simulation/Controller/ARView/ARViewController.swift": [1559460229, 238764994]
+  "/Users/kai/Desktop/ARkit/AR-research/AR-417-Simulation/AR-417-Simulation/API/APIService.swift": [1559460052, 268582496]
+  "/Users/kai/Desktop/ARkit/AR-research/AR-417-Simulation/AR-417-Simulation/domain/WorkSchedule.swift": [1551637952, 497200966]
+  "/Users/kai/Desktop/ARkit/AR-research/AR-417-Simulation/AR-417-Simulation/domain/GlobaleVarible.swift": [1555834133, 330982327]
+  "/Users/kai/Desktop/ARkit/AR-research/AR-417-Simulation/AR-417-Simulation/domain/User.swift": [1544593633, 950610399]
+  "/Users/kai/Desktop/ARkit/AR-research/AR-417-Simulation/AR-417-Simulation/AppDelegate.swift": [1559452841, 722764767]
+  "/Users/kai/Desktop/ARkit/AR-research/AR-417-Simulation/AR-417-Simulation/domain/VirtualObj.swift": [1547284011, 313711166]
