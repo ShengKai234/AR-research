@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A2A57E822BDE3F100AE530C /* 417-0622-simple.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2A2A57E722BDE3F000AE530C /* 417-0622-simple.dae */; };
+		2A2A57EC22BDE94D00AE530C /* 417-0622-orig.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2A2A57EB22BDE94C00AE530C /* 417-0622-orig.dae */; };
 		2A9AEF7422A3942900AB6145 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9AEF7322A3942900AB6145 /* AppDelegate.swift */; };
 		2A9AEF7622A3942900AB6145 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9AEF7522A3942900AB6145 /* ARViewController.swift */; };
 		2A9AEF7922A3942900AB6145 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A9AEF7722A3942900AB6145 /* Main.storyboard */; };
@@ -29,9 +31,12 @@
 		2A9AEFAB22A3A1AB00AB6145 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9AEFA722A3A1AB00AB6145 /* User.swift */; };
 		2A9AEFAC22A3A1AB00AB6145 /* VirtualObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9AEFA822A3A1AB00AB6145 /* VirtualObj.swift */; };
 		2A9AEFB222A3A4D500AB6145 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9AEFB122A3A4D500AB6145 /* APIService.swift */; };
+		2A9C2E3B22BDF18700F32523 /* 417-0622test.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2A9C2E3A22BDF18700F32523 /* 417-0622test.dae */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A2A57E722BDE3F000AE530C /* 417-0622-simple.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = "417-0622-simple.dae"; sourceTree = "<group>"; };
+		2A2A57EB22BDE94C00AE530C /* 417-0622-orig.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = "417-0622-orig.dae"; sourceTree = "<group>"; };
 		2A9AEF7022A3942900AB6145 /* AR-417-Simulation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AR-417-Simulation.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A9AEF7322A3942900AB6145 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2A9AEF7522A3942900AB6145 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
@@ -56,6 +61,7 @@
 		2A9AEFA722A3A1AB00AB6145 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		2A9AEFA822A3A1AB00AB6145 /* VirtualObj.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualObj.swift; sourceTree = "<group>"; };
 		2A9AEFB122A3A4D500AB6145 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		2A9C2E3A22BDF18700F32523 /* 417-0622test.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = "417-0622test.dae"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,17 +110,20 @@
 		2A9AEF8522A3945900AB6145 /* 3D Models */ = {
 			isa = PBXGroup;
 			children = (
+				2A9C2E3A22BDF18700F32523 /* 417-0622test.dae */,
+				2A2A57EB22BDE94C00AE530C /* 417-0622-orig.dae */,
 				2A9AEF8622A3945900AB6145 /* E2-417_0807.json */,
 				2A9AEF8722A3945900AB6145 /* 456.dae */,
 				2A9AEF8822A3945900AB6145 /* 417.scn */,
+				2A2A57E722BDE3F000AE530C /* 417-0622-simple.dae */,
 				2A9AEF8922A3945900AB6145 /* cube.scn */,
 				2A9AEF8A22A3945900AB6145 /* 417_Model_Final_1.dae */,
 				2A9AEF8B22A3945900AB6145 /* 417_space-1.dae */,
 				2A9AEF8C22A3945900AB6145 /* 417_space.scn */,
 				2A9AEF8D22A3945900AB6145 /* E2-417_0807.scn */,
 				2A9AEF8F22A3945900AB6145 /* SceneKit Scene.scn */,
-				2A9AEF9122A3945900AB6145 /* mountain.scn */,
 				2A9AEF9222A3945900AB6145 /* E2-417ResetAxi.dae */,
+				2A9AEF9122A3945900AB6145 /* mountain.scn */,
 				2A9AEF9322A3945900AB6145 /* Ship */,
 				2A9AEF9422A3945900AB6145 /* 417_Model.dae */,
 			);
@@ -234,6 +243,7 @@
 				2A9AEF9C22A3945900AB6145 /* E2-417_0807.scn in Resources */,
 				2A9AEF9B22A3945900AB6145 /* 417_space.scn in Resources */,
 				2A9AEF9A22A3945900AB6145 /* 417_space-1.dae in Resources */,
+				2A2A57E822BDE3F100AE530C /* 417-0622-simple.dae in Resources */,
 				2A9AEFA022A3945900AB6145 /* 417_Model.dae in Resources */,
 				2A9AEF9922A3945900AB6145 /* 417_Model_Final_1.dae in Resources */,
 				2A9AEF9522A3945900AB6145 /* E2-417_0807.json in Resources */,
@@ -243,7 +253,9 @@
 				2A9AEF7922A3942900AB6145 /* Main.storyboard in Resources */,
 				2A9AEF9822A3945900AB6145 /* cube.scn in Resources */,
 				2A9AEF9622A3945900AB6145 /* 456.dae in Resources */,
+				2A9C2E3B22BDF18700F32523 /* 417-0622test.dae in Resources */,
 				2A9AEF9E22A3945900AB6145 /* mountain.scn in Resources */,
+				2A2A57EC22BDE94D00AE530C /* 417-0622-orig.dae in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

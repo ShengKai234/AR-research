@@ -124,8 +124,7 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
         
         //陀螺儀位置抓取
         let configuration = ARWorldTrackingConfiguration()
-        //錨點設置
-        configuration.detectionImages = referenceImages
+        
         //清出先前追蹤相關錨點
         let options: ARSession.RunOptions=[.resetTracking, .removeExistingAnchors]
         //執行sceneView配置，－－> renderer
@@ -1104,10 +1103,11 @@ class ARViewController: UIViewController, UITableViewDataSource, UITableViewDele
 extension ARViewController: ARSCNViewDelegate {
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        print("1111111")
         DispatchQueue.main.async {
             guard let imageAnchor = anchor as? ARImageAnchor,
                 let imageName = imageAnchor.referenceImage.name else { return }
-            
+            print(imageName)
             // TODO: Comment out code
             let planeNode = self.getPlaneNode(withReferenceImage: imageAnchor.referenceImage)
             planeNode.opacity = 0.0

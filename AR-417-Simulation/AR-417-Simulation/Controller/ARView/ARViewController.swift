@@ -40,7 +40,7 @@ class ARViewController: UIViewController, UINavigationControllerDelegate {
     //物件建立於場景的初始化，以及影像辨識對應的物件
     lazy var ColumnNode: SCNNode = {
         guard let scene = SCNScene(named: "417.scn"),
-            let node = scene.rootNode.childNode(withName: "box_node", recursively: false) else { return SCNNode() }
+            let node = scene.rootNode.childNode(withName: "417-0622-orig", recursively: false) else { return SCNNode() }
         return node
     }()
     lazy var ElectromechanicalNode: SCNNode = {
@@ -117,8 +117,9 @@ class ARViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     @IBAction func btn_test(_ sender: Any) {
-        for obj in workSchedules{
-            print(obj.modelName)
+        for node in currentNode!.childNodes{
+            print(node.key)
+            print(node.actionKeys)
         }
     }
     
